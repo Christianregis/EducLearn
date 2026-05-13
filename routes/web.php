@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\Student\Product\ProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -40,6 +41,10 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('/student', function () {
         return Inertia::render('Student/Index');
     })->name('studentDashboard');
+
+    Route::get('/student/courses', [ProductController::class, 'indexBooks'])->name('studentCourses');
+    Route::get('/student/videos', [ProductController::class, 'indexVideos'])->name('studentVideos');
+    Route::get('/student/audios', [ProductController::class, 'indexAudios'])->name('studentAudios');
 });
 
 Route::get('/catalog', function () {

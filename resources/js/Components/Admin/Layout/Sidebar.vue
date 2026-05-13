@@ -2,15 +2,26 @@
 import { Link } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import FlashMessage from '@/Components/FlashMessage.vue'
-import { dashboard, logout } from '@/routes'
+import { dashboard, logout, studentAudios, studentCourses, studentVideos } from '@/routes'
 const sidebarCollapsed = ref(false)
 const activeSection = ref('dashboard')
 
 const navItems = [
     { key: 'dashboard', label: 'Tableau de bord', icon: 'fas fa-th-large', badge: null, link: dashboard() },
-    { key: 'courses', label: 'Mes cours', icon: 'fas fa-book-open', badge: '12', link: '#' },
-    { key: 'videos', label: 'Vidéos', icon: 'fas fa-video', badge: '8', link: '#' },
+    { key: 'courses', label: 'Mes cours', icon: 'fas fa-book-open', badge: '12', link: studentCourses() },
+    { key: 'videos', label: 'Vidéos', icon: 'fas fa-video', badge: '8', link: studentVideos() },
+    {key: 'audios', label: 'Audios', icon: 'fas fa-headphones', badge: '5', link: studentAudios()},
+
 ]
+
+interface User {
+    user: {
+        name: string,
+        email: string,
+    }
+}
+
+defineProps<User>()
 </script>
 
 <template>
@@ -78,7 +89,7 @@ const navItems = [
             <div v-if="!sidebarCollapsed" class="min-w-0 flex-1">
 
                 <p class="text-[13px] font-bold text-white truncate">
-                    Aminata Diallo
+                    {{ user.name }}
                 </p>
 
                 <div class="flex items-center gap-2 mt-1">

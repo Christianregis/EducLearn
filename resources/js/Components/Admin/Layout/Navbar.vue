@@ -15,6 +15,15 @@ const navItems = [
 const currentPageLabel = computed(() =>
     navItems.find(n => n.key === activeSection.value)?.label ?? 'Tableau de bord'
 )
+
+interface User {
+    user: {
+        name: string,
+        email: string,
+    }
+}
+
+defineProps<User>()
 </script>
 
 <template>
@@ -87,7 +96,7 @@ const currentPageLabel = computed(() =>
                 <div class="hidden lg:block text-left leading-tight">
 
                     <p class="text-[13px] font-bold text-dark">
-                        Aminata Diallo
+                        {{ user.name }}
                     </p>
 
                     <p class="text-[11px] text-dark-400">

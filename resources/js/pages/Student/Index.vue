@@ -1,10 +1,10 @@
 <template>
     <!-- ── ROOT LAYOUT ── -->
     <div class="flex h-screen overflow-hidden font-sans bg-dark-50">
-        <Sidebar />
+        <Sidebar :user="user"/>
 
         <div class="flex-1 flex flex-col overflow-hidden min-w-0">
-            <Navbar />
+            <Navbar :user="user"/>
 
             <!-- PAGE CONTENT -->
             <main class="flex-1 overflow-y-auto px-7 pt-7 pb-10 scrollbar-thin scrollbar-thumb-dark-200">
@@ -12,7 +12,7 @@
                 <div class="flex items-start justify-between mb-6">
                     <div>
                         <h1 class="text-[22px] font-bold text-dark">Tableau de bord</h1>
-                        <p class="text-[13px] text-dark-500 mt-0.5">Bienvenue Aminata — voici votre progression du jour
+                        <p class="text-[13px] text-dark-500 mt-0.5">{{ user.name }} — voici votre progression du jour
                         </p>
                     </div>
                     <button
@@ -25,9 +25,9 @@
                 <div class="grid grid-cols-12 gap-4 mb-6">
                     <!-- Cours inscrits (larger card - 6 colonnes) -->
                     <div
-                        class="col-span-12 md:col-span-6 bg-white rounded-2xl p-[18px_16px] flex items-start gap-3.5 transition-shadow hover:shadow-lg">
+                        class="col-span-12 md:col-span-6 bg-white rounded-2xl p-[18px_16px] flex items-start gap-3.5 transition-shadow hover:shadow-lg border border-amber-100">
                         <div
-                            class="w-[42px] h-[42px] rounded-[11px] flex items-center justify-center text-base flex-shrink-0 bg-brand-light text-amber-600">
+                            class="w-[42px] h-[42px] rounded-[11px] flex items-center justify-center text-base shrink-0 bg-brand-light text-amber-600">
                             <i class="fas fa-book-open"></i>
                         </div>
                         <div>
@@ -41,9 +41,9 @@
 
                     <!-- Cours terminés (3 colonnes) -->
                     <div
-                        class="col-span-6 md:col-span-3 bg-white rounded-2xl p-[18px_16px] flex items-start gap-3.5 transition-shadow hover:shadow-lg">
+                        class="col-span-6 md:col-span-3 bg-white rounded-2xl p-[18px_16px] flex items-start border border-amber-100 gap-3.5 transition-shadow hover:shadow-lg">
                         <div
-                            class="w-[42px] h-[42px] rounded-[11px] flex items-center justify-center text-base flex-shrink-0 bg-emerald-50 text-emerald-600">
+                            class="w-[42px] h-[42px] rounded-[11px] flex items-center justify-center text-base shrink-0 bg-emerald-50 text-emerald-600">
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <div>
@@ -57,9 +57,9 @@
 
                     <!-- Heures d'apprentissage (4 colonnes) -->
                     <div
-                        class="col-span-6 md:col-span-3 bg-white rounded-2xl p-[18px_16px] flex items-start gap-3.5 transition-shadow hover:shadow-lg">
+                        class="col-span-6 md:col-span-3 bg-white rounded-2xl p-[18px_16px] flex items-start gap-3.5 transition-shadow hover:shadow-lg border-amber-100">
                         <div
-                            class="w-[42px] h-[42px] rounded-[11px] flex items-center justify-center text-base flex-shrink-0 bg-blue-50 text-blue-600">
+                            class="w-[42px] h-[42px] rounded-[11px] flex items-center justify-center text-base shrink-0 bg-blue-50 text-blue-600">
                             <i class="fas fa-clock"></i>
                         </div>
                         <div>
@@ -71,7 +71,7 @@
                 <!-- /KPI GRID -->
 
                 <!-- ── CHARTS ROW ── -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6" border-amber-100>
                     <!-- Bar Chart -->
                     <div class="bg-white rounded-2xl p-5">
                         <div class="flex items-center justify-between mb-4">
@@ -92,7 +92,7 @@
                     </div>
 
                     <!-- Doughnut Chart -->
-                    <div class="bg-white rounded-2xl p-5">
+                    <div class="bg-white rounded-2xl p-5 border-amber-100">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-sm font-semibold text-dark">
                                 Répartition
@@ -104,17 +104,17 @@
                         </div>
                         <div class="flex flex-col gap-1.5 mt-3">
                             <div class="flex items-center gap-2 text-xs text-dark-500">
-                                <span class="w-2 h-2 rounded-full inline-block flex-shrink-0"
+                                <span class="w-2 h-2 rounded-full inline-block shrink-0"
                                     style="background:#F4B400"></span>
                                 Vidéo 58%
                             </div>
                             <div class="flex items-center gap-2 text-xs text-dark-500">
-                                <span class="w-2 h-2 rounded-full inline-block flex-shrink-0"
+                                <span class="w-2 h-2 rounded-full inline-block shrink-0"
                                     style="background:#111827"></span>
                                 Audio 24%
                             </div>
                             <div class="flex items-center gap-2 text-xs text-dark-500">
-                                <span class="w-2 h-2 rounded-full inline-block flex-shrink-0"
+                                <span class="w-2 h-2 rounded-full inline-block shrink-0"
                                     style="background:#E5E7EB"></span>
                                 PDF 18%
                             </div>
@@ -124,7 +124,7 @@
                 <!-- /CHARTS ROW -->
 
                 <!-- ── BOTTOM ROW ── -->
-                <div class="grid grid-cols-1 gap-4">
+                <div class="grid grid-cols-1 gap-4 border border-amber-100 rounded-2xl p-4">
                     <!-- Cours en cours -->
                     <div class="bg-white rounded-2xl p-5">
                         <div class="flex items-center justify-between mb-4">
@@ -155,7 +155,7 @@
                                 </div>
 
                                 <!-- Right -->
-                                <div class="flex flex-col items-center gap-1.5 flex-shrink-0">
+                                <div class="flex flex-col items-center gap-1.5 shrink-0">
                                     <span class="text-xs font-bold text-dark">{{ c.progress }}%</span>
                                     <button
                                         class="w-7 h-7 rounded-full bg-brand hover:bg-brand-dark border-none cursor-pointer flex items-center justify-center text-dark text-[10px] transition-colors">
@@ -175,6 +175,7 @@
 </template>
 
 <script setup lang="ts">
+import { usePage } from '@inertiajs/vue3'
 import Chart from 'chart.js/auto'
 import { onMounted, ref } from 'vue'
 import Navbar from '@/Components/Admin/Layout/Navbar.vue'
@@ -280,6 +281,9 @@ onMounted(() => {
         })
     }
 })
+
+const page = usePage();
+const user = page.props.auth.user;
 </script>
 
 <style scoped>
