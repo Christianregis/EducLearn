@@ -94,11 +94,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { Product } from '@/types/Product'
 import FilterSidebar from '@/Components/FilterSidebar.vue'
 import ProductCard from '@/Components/ProductCard.vue'
 import Footer from '@/Components/Public/Footer.vue'
 import Navigation from '@/Components/Public/Navigation.vue'
+import type { Product } from '@/types/Product'
+
 
 // Mock Data
 const allProducts: Product[] = [

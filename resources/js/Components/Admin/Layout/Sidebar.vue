@@ -1,92 +1,81 @@
 <template>
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex items-center gap-2 cursor-pointer" @click="goToHome">
-                    <div class="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
-                        <div class="w-5 h-5 bg-white rounded-full"></div>
+            <aside class="sidebar" :class="{ collapsed: sidebarCollapsed }">
+            <div class="sidebar-header">
+                <div class="logo-block">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
                     </div>
-                    <span class="text-xl font-bold text-black">Educ-Learn</span>
+                    <span class="logo-text" v-if="!sidebarCollapsed">Educ<span>-Learn</span></span>
                 </div>
-
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center gap-8">
-                    <Link :href="home()"
-                        class="text-gray-700 hover:text-black font-medium transition-colors">
-                        Accueil
-                    </Link>
-                    <Link :href="catalog()"
-                        class="text-gray-700 hover:text-black font-medium transition-colors">
-                        Catalogue
-                    </Link>
-                    <Link href="/about"
-                        class="text-gray-700 hover:text-black font-medium transition-colors">
-                        À propos
-                    </Link>
-                    <Link href="/contact"
-                        class="text-gray-700 hover:text-black font-medium transition-colors">
-                        Nous Contacter
-                    </Link>
-                </div>
-
-                <!-- Auth Buttons -->
-                <div class="flex items-center gap-4">
-                    <Link :href="showLogin()"
-                        class="hidden sm:block text-gray-700 hover:text-black font-medium transition-colors">
-                        Connexion
-                    </Link>
-                    <Link :href="showRegister()"
-                        class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-6 py-2 rounded-lg transition-colors">
-                        S'inscrire
-                    </Link>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-gray-700 hover:text-black">
-                    <i class="fas fa-bars text-xl"></i>
+                <button class="collapse-btn" @click="sidebarCollapsed = !sidebarCollapsed">
+                    <i :class="sidebarCollapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left'"></i>
                 </button>
             </div>
 
-            <!-- Mobile Menu -->
-            <div v-if="mobileMenuOpen" class="md:hidden pb-4 border-t border-gray-200">
-                <Link :href="home()"
-                    class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 font-medium">
-                    Accueil
-                </Link>
-                <Link :href="catalog()"
-                    class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 font-medium">
-                    Catalogue
-                </Link>
-                <Link href="/about"
-                    class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 font-medium">
-                    À propos
-                </Link>
-                <Link href="/contact"
-                    class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 font-medium">
-                    Nous Contacter
-                </Link>
+            <div class="sidebar-user" v-if="!sidebarCollapsed">
+                <div class="user-avatar">AD</div>
+                <div class="user-meta">
+                    <p class="user-name">Aminata Diallo</p>
+                    <span class="user-badge student">Étudiant</span>
+                </div>
             </div>
-        </div>
-    </nav>
+            <div class="sidebar-user centered" v-else>
+                <div class="user-avatar small">AD</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <p class="nav-label" v-if="!sidebarCollapsed">Principal</p>
+                <ul>
+                    <li v-for="item in navItems" :key="item.key" class="nav-item"
+                        :class="{ active: activeSection === item.key }" @click="activeSection = item.key"
+                        :title="sidebarCollapsed ? item.label : ''">
+                        <i :class="item.icon"></i>
+                        <span v-if="!sidebarCollapsed">{{ item.label }}</span>
+                        <span v-if="!sidebarCollapsed && item.badge" class="nav-badge">{{ item.badge }}</span>
+                    </li>
+                </ul>
+
+                <p class="nav-label" v-if="!sidebarCollapsed">Compte</p>
+                <ul>
+                    <li class="nav-item" title="Paramètres">
+                        <i class="fas fa-cog"></i>
+                        <span v-if="!sidebarCollapsed">Paramètres</span>
+                    </li>
+                    <li class="nav-item" title="Aide">
+                        <i class="fas fa-question-circle"></i>
+                        <span v-if="!sidebarCollapsed">Aide</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer" v-if="!sidebarCollapsed">
+                <div class="storage-block">
+                    <p class="storage-label">Progression globale</p>
+                    <div class="storage-bar">
+                        <div class="storage-fill" style="width: 68%"></div>
+                    </div>
+                    <p class="storage-percent">68% complété</p>
+                </div>
+            </div>
+        </aside>
 </template>
-
 <script setup lang="ts">
-import { Link, router } from '@inertiajs/vue3'
-import { ref } from 'vue'
-import { catalog, home, showLogin, showRegister } from '@/routes'
+import { ref } from 'vue';
 
-const mobileMenuOpen = ref(false)
+const sidebarCollapsed = ref(false)
+const activeSection = ref('dashboard')
 
-const goToHome = () => {
-    router.visit('/')
-}
+
+const navItems = [
+    { key: 'dashboard', label: 'Tableau de bord', icon: 'fas fa-th-large', badge: null },
+    { key: 'courses', label: 'Mes cours', icon: 'fas fa-book-open', badge: '12' },
+    { key: 'certificates', label: 'Certificats', icon: 'fas fa-award', badge: '4' },
+    { key: 'calendar', label: 'Calendrier', icon: 'fas fa-calendar-alt', badge: null },
+    { key: 'messages', label: 'Messages', icon: 'fas fa-comment-dots', badge: '3' },
+]
+
 </script>
-
 <style scoped>
-nav {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
 /* ── ROOT LAYOUT ── */
 .dashboard-root {
     display: flex;

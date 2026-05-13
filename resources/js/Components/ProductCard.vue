@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Product } from '@/types/Product';
-import { useCartStore } from './store/cartStore';
+import { useCartStore } from '../store/cartStore';
 
 
 
