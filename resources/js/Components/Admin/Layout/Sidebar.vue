@@ -1,17 +1,20 @@
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3'
 import { ref } from 'vue'
-
+import FlashMessage from '@/Components/FlashMessage.vue'
+import { dashboard, logout } from '@/routes'
 const sidebarCollapsed = ref(false)
 const activeSection = ref('dashboard')
 
 const navItems = [
-    { key: 'dashboard', label: 'Tableau de bord', icon: 'fas fa-th-large', badge: null },
-    { key: 'courses', label: 'Mes cours', icon: 'fas fa-book-open', badge: '12' },
-    { key: 'videos', label: 'Vidéos', icon: 'fas fa-video', badge: '8' },
+    { key: 'dashboard', label: 'Tableau de bord', icon: 'fas fa-th-large', badge: null, link: dashboard() },
+    { key: 'courses', label: 'Mes cours', icon: 'fas fa-book-open', badge: '12', link: '#' },
+    { key: 'videos', label: 'Vidéos', icon: 'fas fa-video', badge: '8', link: '#' },
 ]
 </script>
 
 <template>
+    <FlashMessage />
     <!-- ── SIDEBAR ── -->
     <aside :class="[
         'bg-yellow-500  text-white border-r border flex flex-col shrink-0 overflow-hidden transition-all duration-300',
@@ -116,24 +119,26 @@ const navItems = [
                                 : 'text-dark-400 hover:bg-dark-50 hover:text-dark'
                         ]">
 
-                        <!-- ICON -->
-                        <i :class="[item.icon, 'text-[14px] w-4 text-center shrink-0']"></i>
+                        <Link :href="item.link" class="flex items-center gap-3 w-full h-full">
+                            <!-- ICON -->
+                            <i :class="[item.icon, 'text-[14px] w-4 text-center shrink-0']"></i>
 
-                        <!-- LABEL -->
-                        <span v-if="!sidebarCollapsed" class="text-[13px] font-semibold truncate">
-                            {{ item.label }}
-                        </span>
+                            <!-- LABEL -->
+                            <span v-if="!sidebarCollapsed" class="text-[13px] font-semibold truncate">
+                                {{ item.label }}
+                            </span>
 
-                        <!-- BADGE -->
-                        <span v-if="!sidebarCollapsed && item.badge" :class="[
-                            'ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full',
-                            activeSection === item.key
-                                ? 'bg-dark text-white'
-                                : 'bg-dark-100 text-dark-500'
-                        ]">
+                            <!-- BADGE -->
+                            <span v-if="!sidebarCollapsed && item.badge" :class="[
+                                'ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full',
+                                activeSection === item.key
+                                    ? 'bg-dark text-white'
+                                    : 'bg-dark-100 text-dark-500'
+                            ]">
 
-                            {{ item.badge }}
-                        </span>
+                                {{ item.badge }}
+                            </span>
+                        </Link>
                     </li>
 
                 </ul>
@@ -159,11 +164,13 @@ const navItems = [
                         'text-dark-400 hover:bg-dark-50 hover:text-dark'
                     ]">
 
-                        <i class="fas fa-user text-[14px] w-4 text-center shrink-0"></i>
+                        <Link>
+                            <i class="fas fa-user text-[14px] w-4 text-center shrink-0"></i>
 
-                        <span v-if="!sidebarCollapsed" class="text-[13px] font-semibold">
-                            Profil
-                        </span>
+                            <span v-if="!sidebarCollapsed" class="text-[13px] font-semibold">
+                                Profil
+                            </span>
+                        </Link>
                     </li>
 
                     <!-- HELP -->
@@ -175,11 +182,13 @@ const navItems = [
                         'text-dark-400 hover:bg-dark-50 hover:text-dark'
                     ]">
 
-                        <i class="fas fa-question-circle text-[14px] w-4 text-center shrink-0"></i>
+                        <Link>
+                            <i class="fas fa-question text-[14px] w-4 text-center shrink-0"></i>
 
-                        <span v-if="!sidebarCollapsed" class="text-[13px] font-semibold">
-                            Aide
-                        </span>
+                            <span v-if="!sidebarCollapsed" class="text-[13px] font-semibold">
+                                Aide
+                            </span>
+                        </Link>
                     </li>
                     <li :class="[
                         'flex items-center rounded-2xl cursor-pointer transition-all duration-200',
@@ -189,11 +198,13 @@ const navItems = [
                         'text-dark-400 hover:bg-dark-50 hover:text-dark'
                     ]">
 
-                        <i class="fas fa-sign-out-alt text-[14px] w-4 text-center shrink-0"></i>
+                        <Link :href="logout()">
+                            <i class="fas fa-sign-out-alt text-[14px] w-4 text-center shrink-0"></i>
 
-                        <span v-if="!sidebarCollapsed" class="text-[13px] font-semibold">
-                            Se déconnecter
-                        </span>
+                            <span v-if="!sidebarCollapsed" class="text-[13px] font-semibold">
+                                Se déconnecter
+                            </span>
+                        </Link>
                     </li>
                 </ul>
             </div>
