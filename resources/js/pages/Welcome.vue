@@ -212,9 +212,10 @@
 </template>
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { showLogin, showRegister } from '@/routes';
 import Footer from '@/Components/Public/Footer.vue';
 import Navigation from '@/Components/Public/Navigation.vue';
+import { showLogin, showRegister } from '@/routes';
+
 
 
 

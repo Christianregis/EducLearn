@@ -3,10 +3,7 @@
     <div class="flex h-screen overflow-hidden font-sans bg-dark-50">
 
         <Sidebar />
-
-        <!-- ════════════════════════════════
-         MAIN CONTENT
-    ════════════════════════════════ -->
+        
         <div class="flex-1 flex flex-col overflow-hidden min-w-0">
 
             <Navbar />
@@ -22,7 +19,7 @@
                         </p>
                     </div>
                     <button class="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark text-dark font-bold text-[13px]
-                   px-[18px] py-[10px] rounded-[9px] border-none cursor-pointer transition-colors">
+                   px-4.5 py-2.5 rounded-[9px] border-none cursor-pointer transition-colors">
                         <i class="fas fa-plus"></i> Nouveau cours
                     </button>
                 </div>
@@ -172,7 +169,7 @@
                                 <div class="flex-1 min-w-0">
                                     <p class="text-[13px] font-semibold text-dark truncate">{{ c.title }}</p>
                                     <p class="text-[11px] text-dark-400 mt-0.5 mb-1.5">{{ c.instructor }} · {{ c.format
-                                        }}</p>
+                                    }}</p>
                                     <div class="h-1 bg-dark-100 rounded-full overflow-hidden">
                                         <div class="h-full rounded-full transition-[width] duration-400"
                                             :style="`width:${c.progress}%; background:${c.progress >= 80 ? '#10B981' : '#F4B400'}`">
@@ -327,7 +324,7 @@ onMounted(() => {
 
     /* Doughnut Chart */
     const fmtCtx = (document.getElementById('formatChart') as HTMLCanvasElement)?.getContext('2d')
-    
+
     if (fmtCtx) {
         new (window as any).Chart(fmtCtx, {
             type: 'doughnut',
