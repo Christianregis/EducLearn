@@ -426,9 +426,15 @@ interface Book {
     color: string
     level: string
     file: string
-    students: number
+    students: number | null
     status: string
 }
+
+const props = defineProps<{
+    books: {
+        data: Book[]
+    }
+}>()
 
 /* ── State ── */
 const view = ref<'grid' | 'list'>('grid')
@@ -439,51 +445,14 @@ const selectedBook = ref<Book | null>(null)
 const bookToDelete = ref<Book | null>(null)
 
 /* ── Mock data (replace with props from Inertia or fetch) ── */
-const books = ref<Book[]>([
-    {
-        id: 1, title: 'JavaScript Avancé — Patterns & Architecture', description: 'Maîtrisez les design patterns et les architectures modernes avec JavaScript ES2024.',
-        category: 'Développement Web', duration: '4h 20min', price: 29.99,
-        icon: 'fas fa-code', color: '#D97706', format: 'PDF', progress: 72, level: 'Avancé',
-        file: '#', students: 112, status: 'Publié',
-    },
-    {
-        id: 2, title: 'Fondamentaux UX/UI Design', description: 'Apprenez les bases du design centré utilisateur avec Figma et Adobe XD.',
-        category: 'Design', duration: '3h 10min', price: 19.99,
-        icon: 'fas fa-paint-brush', color: '#7C3AED', format: 'PDF', progress: 55, level: 'Débutant',
-        file: '#', students: 78, status: 'Publié',
-    },
-    {
-        id: 3, title: 'Python pour la Data Science', description: 'De NumPy à Scikit-learn, le guide complet pour analyser vos données avec Python.',
-        category: 'Data & IA', duration: '5h 45min', price: 34.99,
-        icon: 'fas fa-brain', color: '#059669', format: 'PDF', progress: 90, level: 'Intermédiaire',
-        file: '#', students: 95, status: 'Publié',
-    },
-    {
-        id: 4, title: 'Marketing Digital & SEO Avancé', description: 'Stratégies de référencement et marketing de contenu pour booster votre visibilité.',
-        category: 'Marketing', duration: '2h 50min', price: null,
-        icon: 'fas fa-bullhorn', color: '#EA580C', format: 'PDF', progress: 30, level: 'Intermédiaire',
-        file: '#', students: 63, status: 'Brouillon',
-    },
-    {
-        id: 5, title: 'React 18 — Hooks & Performance', description: 'Optimisez vos applications React avec les derniers hooks et techniques de performance.',
-        category: 'Développement Web', duration: '6h 00min', price: 39.99,
-        icon: 'fas fa-atom', color: '#0891B2', format: 'PDF', progress: 88, level: 'Avancé',
-        file: '#', students: 134, status: 'Publié',
-    },
-    {
-        id: 6, title: 'Introduction à la Finance', description: 'Les bases de la finance personnelle et des marchés financiers pour débutants.',
-        category: 'Finance', duration: '2h 15min', price: 14.99,
-        icon: 'fas fa-coins', color: '#F4B400', format: 'PDF', progress: 45, level: 'Débutant',
-        file: '#', students: 210, status: 'Publié',
-    },
-])
+const bookList = ref<Book[]>(props.books.data)
 
 /* ── Derived data ── */
-const allCategories = computed(() => [...new Set(books.value.map(b => b.category))])
-const allLevels = computed(() => [...new Set(books.value.map(b => b.level))])
+const allCategories = computed(() => [...new Set(bookList.value.map(b => b.category))])
+const allLevels = computed(() => [...new Set(bookList.value.map(b => b.level))])
 
 const filteredBooks = computed(() => {
-    return books.value.filter(b => {
+    return props.books.data.filter(b => {
         const q = search.value.toLowerCase()
         const matchSearch = !q || b.title.toLowerCase().includes(q) || b.category.toLowerCase().includes(q)
         const matchCat = !filterCategory.value || b.category === filterCategory.value
@@ -507,7 +476,7 @@ function levelBadge(level: string) {
 
 function bookStats(book: Book) {
     return [
-        { label: 'Étudiants', icon: 'fas fa-users', value: book.students.toString() },
+        { label: 'Étudiants', icon: 'fas fa-users', value: book.students?.toString() },
         { label: 'Durée', icon: 'fas fa-clock', value: book.duration },
         { label: 'Prix', icon: 'fas fa-tag', value: book.price ? `${book.price} €` : 'Gratuit' },
         { label: 'Progression', icon: 'fas fa-chart-pie', value: `${book.progress}%` },
@@ -532,7 +501,7 @@ function deleteBook() {
         return
     }
 
-    books.value = books.value.filter(b => b.id !== bookToDelete.value!.id)
+    bookList.value = bookList.value.filter(b => b.id !== bookToDelete.value!.id)
     bookToDelete.value = null
 }
 </script>

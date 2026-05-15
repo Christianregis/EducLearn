@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Teacher\Course;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Teacher\StoreCoursesRequest;
+use App\Http\Resources\Teacher\Courses\CourseResource;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,9 @@ class CourseController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Teacher/Courses/Index');
+        return Inertia::render('Teacher/Courses/Index',[
+            'books' => CourseResource::collection(Course::with('enrollements')->where('teacher_id', Auth::user()->id)->get())
+        ]);
     }
 
     public function create()
