@@ -22,7 +22,7 @@ return new class extends Migration
 
             $table->integer('progress')->default(0);
             $table->string('duration');
-            $table->double('price');
+            $table->double('price')->nullable();
             $table->string('level');
             $table->string('image')->nullable();
             $table->string('icon')->nullable();

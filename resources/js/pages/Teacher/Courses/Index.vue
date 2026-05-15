@@ -1,4 +1,5 @@
 <template>
+    <FlashMessage />
     <div class="flex h-screen overflow-hidden bg-[#F8F7F4] font-sans">
         <Sidebar :user="user" />
 
@@ -23,12 +24,12 @@
                         </p>
                     </div>
 
-                    <a href="/teacher/books/create"
+                    <Link :href="teacherCoursesCreate()"
                         class="hidden sm:inline-flex items-center gap-2 text-[13px] font-bold px-5 py-2.5 rounded-[11px] transition-all duration-200 cursor-pointer border-none no-underline"
                         style="background: linear-gradient(135deg, #F4B400 0%, #E09000 100%); color: #0F1117; box-shadow: 0 4px 14px rgba(244,180,0,0.35)">
                         <i class="fas fa-plus text-[10px]"></i>
                         Ajouter un livre
-                    </a>
+                    </Link>
                 </div>
 
                 <!-- ── FILTERS BAR ── -->
@@ -162,10 +163,6 @@
                                 {{ book.price ? `${book.price} €` : 'Gratuit' }}
                             </span>
                             <div class="flex items-center gap-1.5">
-                                <button @click.stop="editBook(book)"
-                                    class="w-7 h-7 rounded-lg border border-gray-200 bg-gray-50 hover:border-amber-300 hover:bg-amber-50 flex items-center justify-center text-[11px] text-gray-500 hover:text-amber-600 transition-all cursor-pointer">
-                                    <i class="fas fa-pen"></i>
-                                </button>
                                 <button @click.stop="confirmDelete(book)"
                                     class="w-7 h-7 rounded-lg border border-gray-200 bg-gray-50 hover:border-red-200 hover:bg-red-50 flex items-center justify-center text-[11px] text-gray-500 hover:text-red-500 transition-all cursor-pointer">
                                     <i class="fas fa-trash"></i>
@@ -388,10 +385,10 @@
                             class="flex-1 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-[13px] font-bold text-gray-700 hover:bg-gray-100 transition-all cursor-pointer">
                             Annuler
                         </button>
-                        <button @click="deleteBook"
+                        <Link :href="teacherCourseDelete(bookToDelete.id)" :method="'delete'"
                             class="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-[13px] font-bold transition-all cursor-pointer border-none">
                             Supprimer
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -401,10 +398,11 @@
 </template>
 
 <script setup lang="ts">
-import { usePage } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
 import Navbar from '@/Components/Teacher/Layout/Navbar.vue'
 import Sidebar from '@/Components/Teacher/Layout/Sidebar.vue'
+import { teacherCourseDelete, teacherCoursesCreate } from '@/routes';
 
 /* ── Auth ── */
 interface User { name: string; email: string }
@@ -487,23 +485,12 @@ function bookStats(book: Book) {
 function openDetail(book: Book) {
     selectedBook.value = book
 }
-function editBook(book: Book) {
-    // Navigate to edit page — replace with your routing logic
-    console.log('Edit book', book.id)
-    // window.location.href = `/teacher/books/${book.id}/edit`
-}
+
 function confirmDelete(book: Book) {
     bookToDelete.value = book
     selectedBook.value = null
 }
-function deleteBook() {
-    if (!bookToDelete.value) {
-        return
-    }
 
-    bookList.value = bookList.value.filter(b => b.id !== bookToDelete.value!.id)
-    bookToDelete.value = null
-}
 </script>
 
 <style scoped>

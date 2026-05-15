@@ -18,6 +18,8 @@ class Audio extends Model
         'price',
         'image',
         'progress',
+        'description',
+        'category',
         'icon',
         'color',
         'level',

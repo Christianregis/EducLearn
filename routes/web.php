@@ -4,6 +4,9 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\Student\Product\ProductController;
 use App\Http\Controllers\Teacher\Course\CourseController;
+use App\Http\Resources\Teacher\Courses\CoursesDashboardResource;
+use App\Models\Course;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -34,12 +37,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/teacher', function () {
-        return Inertia::render('Teacher/Index');
+
+        $courses = Course::where('teacher_id', Auth::user()->id)->limit(5)->get();
+        return Inertia::render('Teacher/Index',[
+            'courses' => CoursesDashboardResource::collection($courses)
+        ]);
     })->name('teacherDashboard');
 
     Route::get('/teacher/courses', [CourseController::class, 'index'])->name('teacherCourses');
     Route::get('/teacher/courses/create', [CourseController::class, 'create'])->name('teacherCoursesCreate');
     Route::post('/teacher/courses', [CourseController::class, 'store'])->name('teacherCoursesStore');
+    Route::delete('/teacher/courses/{course_id}', [CourseController::class, 'delete'])->name('teacherCourseDelete');
 });
 
 Route::middleware(['auth', 'role:student'])->group(function () {

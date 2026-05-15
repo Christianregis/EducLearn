@@ -372,7 +372,7 @@ import Navbar from '@/Components/Teacher/Layout/Navbar.vue'
 import Sidebar from '@/Components/Teacher/Layout/Sidebar.vue'
 import { teacherCoursesStore } from '@/routes'
 
-interface Form{
+interface Form {
     title: string
     description: string
     category: string

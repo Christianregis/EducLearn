@@ -17,7 +17,12 @@ class Video extends Model
         'duration',
         'price',
         'image',
+        'progress',
+        'description',
+        'category',
         'icon',
+        'color',
+        'level',
         'file'
     ];
 

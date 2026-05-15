@@ -222,12 +222,17 @@ import { teacherCourses, teacherCoursesCreate } from '@/routes';
 /* ── Types ── */
 interface User { name: string; email: string }
 interface Course {
-    id: number; title: string; category: string; format: string
-    icon: string; iconBg: string; iconColor: string
-    formatBg: string; formatColor: string
-    students: number; status: string
+    courses: {
+        data: {
+            id: number; title: string; category: string; format: string
+            icon: string; iconBg: string; iconColor: string
+            formatBg: string; formatColor: string
+            students: number; status: string
+        }[]
+    }
 }
 
+const props = defineProps<Course>()
 /* ── Auth ── */
 const page = usePage()
 const user = page.props.auth.user as User
@@ -287,33 +292,7 @@ const kpis = [
 ]
 
 /* ── Courses table ── */
-const courses: Course[] = [
-    {
-        id: 1, title: 'JavaScript Avancé — Patterns & Architecture', category: 'Développement Web',
-        format: 'Vidéo', icon: 'fas fa-code', iconBg: '#FEF3C7', iconColor: '#D97706',
-        formatBg: '#FEF3C7', formatColor: '#D97706', students: 112, status: 'Publié',
-    },
-    {
-        id: 2, title: 'Fondamentaux UX/UI Design', category: 'Design',
-        format: 'PDF', icon: 'fas fa-paint-brush', iconBg: '#EDE9FE', iconColor: '#7C3AED',
-        formatBg: '#FEE2E2', formatColor: '#DC2626', students: 78, status: 'Publié',
-    },
-    {
-        id: 3, title: 'Python pour la Data Science', category: 'Data & IA',
-        format: 'Audio', icon: 'fas fa-brain', iconBg: '#ECFDF5', iconColor: '#059669',
-        formatBg: '#EFF6FF', formatColor: '#3B82F6', students: 95, status: 'Publié',
-    },
-    {
-        id: 4, title: 'Marketing Digital & SEO Avancé', category: 'Marketing',
-        format: 'PDF', icon: 'fas fa-bullhorn', iconBg: '#FFF7ED', iconColor: '#EA580C',
-        formatBg: '#FEE2E2', formatColor: '#DC2626', students: 63, status: 'Brouillon',
-    },
-    {
-        id: 5, title: 'React 18 — Hooks & Performance', category: 'Développement Web',
-        format: 'Vidéo', icon: 'fas fa-atom', iconBg: '#ECFEFF', iconColor: '#0891B2',
-        formatBg: '#FEF3C7', formatColor: '#D97706', students: 134, status: 'Publié',
-    },
-]
+const courses = props.courses.data
 
 /* ── Quick actions ── */
 const quickActions = [

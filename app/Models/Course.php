@@ -18,6 +18,8 @@ class Course extends Model
         'title',
         'teacher_id',
         'duration',
+        'description',
+        'category',
         'price',
         'image',
         'format',
