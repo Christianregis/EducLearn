@@ -23,12 +23,12 @@
                         </p>
                     </div>
 
-                    <button
+                    <Link :href="teacherCoursesCreate()"
                         class="hidden sm:inline-flex items-center gap-2 text-[13px] font-bold px-5 py-2.5 rounded-[11px] transition-all duration-200 cursor-pointer border-none"
                         style="background: linear-gradient(135deg, #F4B400 0%, #E09000 100%); color: #0F1117; box-shadow: 0 4px 14px rgba(244,180,0,0.35)">
                         <i class="fas fa-plus text-[10px]"></i>
                         Nouveau cours
-                    </button>
+                    </Link>
                 </div>
 
                 <!-- ── KPI STRIP ── -->
@@ -57,10 +57,10 @@
                         <!-- Header -->
                         <div class="flex items-center justify-between px-5 py-4 border-b border-gray-50">
                             <h2 class="text-[14px] font-bold text-gray-900">Mes cours publiés</h2>
-                            <a href="#"
+                            <Link :href="teacherCourses()"
                                 class="text-[11px] font-semibold text-amber-500 hover:text-amber-600 transition-colors flex items-center gap-1">
                                 Voir tout <i class="fas fa-arrow-right text-[9px]"></i>
-                            </a>
+                            </Link>
                         </div>
 
                         <!-- Table header -->
@@ -129,7 +129,7 @@
                         <div class="bg-white rounded-2xl border border-gray-100/80 p-5">
                             <h2 class="text-[14px] font-bold text-gray-900 mb-4">Actions rapides</h2>
                             <div class="grid grid-cols-2 gap-3">
-                                <button v-for="action in quickActions" :key="action.label"
+                                <Link v-for="action in quickActions" :key="action.label" :href="action.link"
                                     class="flex flex-col items-center gap-2 p-3.5 rounded-xl border border-gray-100 hover:border-amber-200 hover:bg-amber-50/40 transition-all group cursor-pointer">
                                     <span
                                         class="w-9 h-9 rounded-xl flex items-center justify-center text-[13px] transition-colors"
@@ -140,7 +140,7 @@
                                         class="text-[11px] font-semibold text-gray-600 group-hover:text-gray-900 text-center leading-tight transition-colors">
                                         {{ action.label }}
                                     </span>
-                                </button>
+                                </Link>
                             </div>
                         </div>
 
@@ -213,10 +213,11 @@
 </template>
 
 <script setup lang="ts">
-import { usePage } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 import Navbar from '@/Components/Teacher/Layout/Navbar.vue'
 import Sidebar from '@/Components/Teacher/Layout/Sidebar.vue'
+import { teacherCourses, teacherCoursesCreate } from '@/routes';
 
 /* ── Types ── */
 interface User { name: string; email: string }
@@ -316,10 +317,9 @@ const courses: Course[] = [
 
 /* ── Quick actions ── */
 const quickActions = [
-    { label: 'Ajouter une vidéo', icon: 'fas fa-circle-play', bg: '#FEF3C7', color: '#D97706' },
-    { label: 'Ajouter un PDF', icon: 'fas fa-file-pdf', bg: '#FEE2E2', color: '#DC2626' },
-    { label: 'Ajouter un audio', icon: 'fas fa-microphone', bg: '#EFF6FF', color: '#3B82F6' },
-    { label: 'Voir les stats', icon: 'fas fa-chart-bar', bg: '#F5F3FF', color: '#7C3AED' },
+    { label: 'Ajouter une vidéo', icon: 'fas fa-circle-play', bg: '#FEF3C7', color: '#D97706', link: teacherCoursesCreate() },
+    { label: 'Ajouter un PDF', icon: 'fas fa-file-pdf', bg: '#FEE2E2', color: '#DC2626', link: teacherCoursesCreate() },
+    { label: 'Ajouter un audio', icon: 'fas fa-microphone', bg: '#EFF6FF', color: '#3B82F6', link: teacherCoursesCreate() },
 ]
 
 </script>

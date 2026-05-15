@@ -47,7 +47,7 @@
             </p>
 
             <!-- Ajouter PDF -->
-            <a href="#"
+            <Link :href="teacherCoursesCreate()"
                 class="sidebar-link">
 
                 <span class="sidebar-icon">
@@ -55,10 +55,10 @@
                 </span>
 
                 <span>Ajouter un PDF</span>
-            </a>
+            </Link>
 
             <!-- Voir PDF -->
-            <a href="#"
+            <Link :href="teacherCourses()"
                 class="sidebar-link">
 
                 <span class="sidebar-icon">
@@ -70,7 +70,7 @@
                 <span class="sidebar-badge">
                     6
                 </span>
-            </a>
+            </Link>
 
             <!-- SECTION -->
             <p class="sidebar-section">
@@ -78,7 +78,7 @@
             </p>
 
             <!-- Ajouter Audio -->
-            <a href="#"
+            <Link href="#"
                 class="sidebar-link">
 
                 <span class="sidebar-icon">
@@ -86,10 +86,10 @@
                 </span>
 
                 <span>Ajouter un Audio</span>
-            </a>
+            </Link>
 
             <!-- Voir Audio -->
-            <a href="#"
+            <Link href="#"
                 class="sidebar-link">
 
                 <span class="sidebar-icon">
@@ -101,7 +101,7 @@
                 <span class="sidebar-badge">
                     4
                 </span>
-            </a>
+            </Link>
 
             <!-- SECTION -->
             <p class="sidebar-section">
@@ -109,7 +109,7 @@
             </p>
 
             <!-- Ajouter Video -->
-            <a href="#"
+            <Link href="#"
                 class="sidebar-link">
 
                 <span class="sidebar-icon">
@@ -117,10 +117,10 @@
                 </span>
 
                 <span>Ajouter une Vidéo</span>
-            </a>
+            </Link>
 
             <!-- Voir Videos -->
-            <a href="#"
+            <Link href="#"
                 class="sidebar-link">
 
                 <span class="sidebar-icon">
@@ -132,7 +132,7 @@
                 <span class="sidebar-badge">
                     11
                 </span>
-            </a>
+            </Link>
 
             <!-- SECTION -->
             <p class="sidebar-section">
@@ -140,7 +140,7 @@
             </p>
 
             <!-- Profil -->
-            <a href="#"
+            <Link href="#"
                 class="sidebar-link">
 
                 <span class="sidebar-icon">
@@ -148,7 +148,7 @@
                 </span>
 
                 <span>Mon Profil</span>
-            </a>
+            </Link>
         </nav>
 
         <!-- ───────── FOOTER ───────── -->
@@ -174,7 +174,7 @@
             </div>
 
             <!-- Logout -->
-            <button @click="'#'"
+            <Link href="#"
                 class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] font-medium text-red-300 hover:text-red-200 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all duration-200 group">
 
                 <span
@@ -185,7 +185,7 @@
                 <span>
                     Déconnexion
                 </span>
-            </button>
+            </Link>
         </div>
     </aside>
 </template>
@@ -193,7 +193,7 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue'
-import { teacherDashboard } from '@/routes';
+import { teacherCourses, teacherCoursesCreate, teacherDashboard } from '@/routes';
 
 
 /* ── Types ── */

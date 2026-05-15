@@ -34,13 +34,13 @@
         <div class="flex items-center gap-2">
 
             <!-- Quick add button -->
-            <button
+            <Link :href="teacherCoursesCreate()"
                 class="hidden sm:inline-flex items-center gap-2 text-[12px] font-bold px-4 py-2 rounded-[10px] transition-all duration-200 border-none cursor-pointer"
                 style="background: linear-gradient(135deg, #F4B400 0%, #E09000 100%); color: #0F1117; box-shadow: 0 2px 8px rgba(244,180,0,0.30)"
                 @click="$emit('new-course')">
                 <i class="fas fa-plus text-[10px]"></i>
                 Nouveau cours
-            </button>
+            </Link>
 
             <!-- Notifications -->
             <button
@@ -138,7 +138,10 @@
 </template>
 
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
 import { ref, computed } from 'vue'
+import { teacherCoursesCreate } from '@/routes';
+
 
 /* ── Types ── */
 interface User { name: string; email: string }

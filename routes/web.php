@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\Student\Product\ProductController;
+use App\Http\Controllers\Teacher\Course\CourseController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -35,6 +36,10 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/teacher', function () {
         return Inertia::render('Teacher/Index');
     })->name('teacherDashboard');
+
+    Route::get('/teacher/courses', [CourseController::class, 'index'])->name('teacherCourses');
+    Route::get('/teacher/courses/create', [CourseController::class, 'create'])->name('teacherCoursesCreate');
+    Route::post('/teacher/courses', [CourseController::class, 'store'])->name('teacherCoursesStore');
 });
 
 Route::middleware(['auth', 'role:student'])->group(function () {
