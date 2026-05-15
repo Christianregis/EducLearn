@@ -89,7 +89,7 @@ defineProps<User>()
                 <div class="w-10 h-10 rounded-xl bg-linear-to-br from-brand to-amber-400
                            flex items-center justify-center text-dark font-bold text-[13px] shadow-sm">
 
-                    AD
+                    {{ user.name[0].toUpperCase() }}
                 </div>
 
                 <!-- User -->

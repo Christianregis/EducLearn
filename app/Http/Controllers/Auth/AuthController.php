@@ -30,9 +30,9 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
-            'role' => 'student',
+            'role' => $request->role,
         ]);
-        $user->assignRole(RoleEnum::STUDENT);
+        $user->assignRole(RoleEnum::from($request->role));
         return redirect()->route('showLogin')->with('success', 'Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.');
     }
 

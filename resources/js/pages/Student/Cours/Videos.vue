@@ -95,7 +95,7 @@
 
                             <!-- Duration Badge -->
                             <div class="absolute bottom-2 right-2 px-2 py-1 bg-dark/80 backdrop-blur-sm rounded-lg">
-                                <span class="text-[10px] font-semibold text-white">{{ video.duration }}</span>
+                                <span class="text-[10px] font-semibold text-amber-400">{{ video.duration }}</span>
                             </div>
 
                             <!-- Progress Overlay -->
