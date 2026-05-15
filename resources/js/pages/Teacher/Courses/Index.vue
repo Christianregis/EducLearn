@@ -400,6 +400,7 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
+import FlashMessage from '@/Components/FlashMessage.vue';
 import Navbar from '@/Components/Teacher/Layout/Navbar.vue'
 import Sidebar from '@/Components/Teacher/Layout/Sidebar.vue'
 import { teacherCourseDelete, teacherCoursesCreate } from '@/routes';
@@ -418,7 +419,7 @@ interface Book {
     duration: string
     price?: number | null
     image?: string | null
-    format: string
+    format: 'pdf' | 'video' | 'audio',
     progress: number
     icon?: string
     color: string

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('description')->nullable();
             $table->string('category')->nullable();
-            
+
             $table->unsignedBigInteger('teacher_id');
             $table->foreign('teacher_id')->references('id')->on('users');
 
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->integer('progress')->default(0);
             $table->string('icon')->nullable();
-            $table->string('color');
+            $table->string('color')->nullable();
             $table->string('level');
             $table->string('file');
 

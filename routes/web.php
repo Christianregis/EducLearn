@@ -5,7 +5,9 @@ use App\Http\Controllers\PublicController;
 use App\Http\Controllers\Student\Product\ProductController;
 use App\Http\Controllers\Teacher\Course\CourseController;
 use App\Http\Resources\Teacher\Courses\CoursesDashboardResource;
+use App\Models\Audio;
 use App\Models\Course;
+use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,7 +41,12 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/teacher', function () {
 
         $courses = Course::where('teacher_id', Auth::user()->id)->limit(5)->get();
-        return Inertia::render('Teacher/Index',[
+        return Inertia::render('Teacher/Index', [
+            'statistics' => [
+                'countCourses' => Course::where('teacher_id', Auth::user()->id)->count()
+                    + Audio::where('teacher_id', Auth::user()->id)->count()
+                    + Video::where('teacher_id', Auth::user()->id)->count(),
+            ],
             'courses' => CoursesDashboardResource::collection($courses)
         ]);
     })->name('teacherDashboard');

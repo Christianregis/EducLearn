@@ -1,4 +1,5 @@
 <template>
+    <FlashMessage />
     <div class="flex h-screen overflow-hidden bg-[#F8F7F4] font-sans">
         <Sidebar :user="user" />
 
@@ -215,12 +216,17 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
+import FlashMessage from '@/Components/FlashMessage.vue';
 import Navbar from '@/Components/Teacher/Layout/Navbar.vue'
 import Sidebar from '@/Components/Teacher/Layout/Sidebar.vue'
 import { teacherCourses, teacherCoursesCreate } from '@/routes';
 
 /* ── Types ── */
 interface User { name: string; email: string }
+interface Statistics {
+    countCourses: number,
+    countStudents: number
+}
 interface Course {
     courses: {
         data: {
@@ -229,8 +235,11 @@ interface Course {
             formatBg: string; formatColor: string
             students: number; status: string
         }[]
-    }
+    },
+    statistics: Statistics
 }
+
+
 
 const props = defineProps<Course>()
 /* ── Auth ── */
@@ -251,7 +260,7 @@ const showNewCourseModal = ref(false)
 const kpis = [
     {
         label: 'Cours publiés',
-        value: '21',
+        value: props.statistics.countCourses.toString(),
         icon: 'fas fa-book-open',
         iconBg: '#FEF3C7',
         iconColor: '#D97706',
@@ -261,7 +270,7 @@ const kpis = [
     },
     {
         label: 'Étudiants inscrits',
-        value: '348',
+        value: '0',
         icon: 'fas fa-users',
         iconBg: '#EFF6FF',
         iconColor: '#3B82F6',
@@ -271,7 +280,7 @@ const kpis = [
     },
     {
         label: 'Taux de complétion',
-        value: '67%',
+        value: '0%',
         icon: 'fas fa-chart-pie',
         iconBg: '#F5F3FF',
         iconColor: '#7C3AED',
@@ -281,7 +290,7 @@ const kpis = [
     },
     {
         label: 'Revenus du mois',
-        value: '1 840€',
+        value: '0€',
         icon: 'fas fa-coins',
         iconBg: '#FEF3C7',
         iconColor: '#F4B400',

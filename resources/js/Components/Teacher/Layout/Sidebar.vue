@@ -1,6 +1,5 @@
 <template>
-    <aside
-        class="w-64 shrink-0 h-screen flex flex-col bg-[#0F1117] border-r border-white/10 overflow-hidden relative">
+    <aside class="w-64 shrink-0 h-screen flex flex-col bg-[#0F1117] border-r border-white/10 overflow-hidden relative">
 
         <!-- Ambient glow -->
         <div
@@ -47,8 +46,7 @@
             </p>
 
             <!-- Ajouter PDF -->
-            <Link :href="teacherCoursesCreate()"
-                class="sidebar-link">
+            <Link :href="teacherCoursesCreate()" class="sidebar-link">
 
                 <span class="sidebar-icon">
                     <i class="fas fa-file-circle-plus"></i>
@@ -58,8 +56,7 @@
             </Link>
 
             <!-- Voir PDF -->
-            <Link :href="teacherCourses()"
-                class="sidebar-link">
+            <Link :href="teacherCourses()" class="sidebar-link">
 
                 <span class="sidebar-icon">
                     <i class="fas fa-file-pdf"></i>
@@ -78,8 +75,7 @@
             </p>
 
             <!-- Ajouter Audio -->
-            <Link href="#"
-                class="sidebar-link">
+            <Link  :href="teacherCoursesCreate()" class="sidebar-link">
 
                 <span class="sidebar-icon">
                     <i class="fas fa-microphone-lines"></i>
@@ -89,8 +85,7 @@
             </Link>
 
             <!-- Voir Audio -->
-            <Link href="#"
-                class="sidebar-link">
+            <Link href="#" class="sidebar-link">
 
                 <span class="sidebar-icon">
                     <i class="fas fa-headphones"></i>
@@ -109,8 +104,7 @@
             </p>
 
             <!-- Ajouter Video -->
-            <Link href="#"
-                class="sidebar-link">
+            <Link :href="teacherCoursesCreate()" class="sidebar-link">
 
                 <span class="sidebar-icon">
                     <i class="fas fa-circle-plus"></i>
@@ -120,8 +114,7 @@
             </Link>
 
             <!-- Voir Videos -->
-            <Link href="#"
-                class="sidebar-link">
+            <Link href="#" class="sidebar-link">
 
                 <span class="sidebar-icon">
                     <i class="fas fa-video"></i>
@@ -140,8 +133,7 @@
             </p>
 
             <!-- Profil -->
-            <Link href="#"
-                class="sidebar-link">
+            <Link href="#" class="sidebar-link">
 
                 <span class="sidebar-icon">
                     <i class="fas fa-user-circle"></i>
@@ -216,6 +208,7 @@ const userInitials = computed(() => {
         .join('')
         .toUpperCase()
 })
+
 </script>
 
 <style scoped>

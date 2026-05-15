@@ -1,7 +1,7 @@
 <template>
     <FlashMessage />
     <div class="flex h-screen overflow-hidden bg-[#F8F7F4] font-sans">
-        <Sidebar :user="user" />
+        <Sidebar :user="user"/>
 
         <div class="flex-1 flex flex-col overflow-hidden min-w-0">
             <Navbar :user="user" />
@@ -17,7 +17,7 @@
                             </span>
                         </div>
                         <h1 class="text-[24px] font-extrabold text-gray-900 leading-tight tracking-tight">
-                            Ajouter un livre PDF
+                            Ajouter un cours (PDF, Video, Audio)
                         </h1>
                         <p class="text-[13px] text-gray-400 mt-1">
                             Renseignez les informations de votre cours en deux étapes.
@@ -225,7 +225,7 @@
                             </div>
 
                             <!-- PDF file upload -->
-                            <div class="flex flex-col gap-1.5">
+                            <div v-if="form.format == 'pdf'" class="flex flex-col gap-1.5">
                                 <label class="text-[11px] font-bold uppercase tracking-widest text-gray-500">
                                     Fichier PDF <span class="text-red-400">*</span>
                                 </label>
@@ -251,6 +251,70 @@
                                             pdfFileName }}</p>
                                         <p class="text-[11px] text-gray-400 mt-0.5">
                                             {{ form.file ? pdfFileSize : 'PDF uniquement — max 50 Mo' }}
+                                        </p>
+                                    </div>
+                                    <button v-if="form.file" type="button" @click.stop="clearPdf"
+                                        class="w-7 h-7 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors text-[10px] shrink-0">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <p v-if="errors.file" class="text-[11px] text-red-500 flex items-center gap-1">
+                                    <i class="fas fa-circle-exclamation text-[9px]"></i>{{ errors.file }}
+                                </p>
+                            </div>
+                            <div v-else-if="form.format == 'video'" class="flex flex-col gap-1.5">
+                                <label class="text-[11px] font-bold uppercase tracking-widest text-gray-500">
+                                    Fichier Videos (MP4, MKV...) <span class="text-red-400">*</span>
+                                </label>
+                                <div @click="triggerPdfInput" @dragover.prevent="pdfDragOver = true"
+                                    @dragleave.prevent="pdfDragOver = false" @drop.prevent="handlePdfDrop"
+                                    class="relative border-2 border-dashed rounded-xl p-5 flex items-center gap-4 cursor-pointer transition-all"
+                                    :class="errors.file
+                                        ? 'border-red-300 bg-red-50'
+                                        : pdfDragOver
+                                            ? 'border-amber-400 bg-amber-50/40'
+                                            : 'border-gray-200 bg-gray-50 hover:border-amber-300 hover:bg-amber-50/20'">
+                                    <input ref="pdfInput" type="file" accept=".mp4" class="hidden"
+                                        @change="handlePdfSelect" />
+                                    <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                                        :style="form.file ? 'background:#FEE2E2; color:#DC2626' : 'background:#FEE2E2; color:#DC2626'">
+                                        <i class="fas fa-camera text-[14px]"></i>
+                                    </span>
+                                    <div class="flex-1 min-w-0">
+                                        <p v-if="!form.file" class="text-[12.5px] font-semibold text-gray-600">
+                                            Glissez votre Video ou cliquez pour parcourir
+                                        </p>
+                                    </div>
+                                    <button v-if="form.file" type="button" @click.stop="clearPdf"
+                                        class="w-7 h-7 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors text-[10px] shrink-0">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <p v-if="errors.file" class="text-[11px] text-red-500 flex items-center gap-1">
+                                    <i class="fas fa-circle-exclamation text-[9px]"></i>{{ errors.file }}
+                                </p>
+                            </div>
+                            <div v-else-if="form.format == 'audio'" class="flex flex-col gap-1.5">
+                                <label class="text-[11px] font-bold uppercase tracking-widest text-gray-500">
+                                    Fichier Audio (MP3, MK4A...) <span class="text-red-400">*</span>
+                                </label>
+                                <div @click="triggerPdfInput" @dragover.prevent="pdfDragOver = true"
+                                    @dragleave.prevent="pdfDragOver = false" @drop.prevent="handlePdfDrop"
+                                    class="relative border-2 border-dashed rounded-xl p-5 flex items-center gap-4 cursor-pointer transition-all"
+                                    :class="errors.file
+                                        ? 'border-red-300 bg-red-50'
+                                        : pdfDragOver
+                                            ? 'border-amber-400 bg-amber-50/40'
+                                            : 'border-gray-200 bg-gray-50 hover:border-amber-300 hover:bg-amber-50/20'">
+                                    <input ref="pdfInput" type="file" accept=".mp3" class="hidden"
+                                        @change="handlePdfSelect" />
+                                    <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                                        :style="form.file ? 'background:#FEE2E2; color:#DC2626' : 'background:#FEE2E2; color:#DC2626'">
+                                        <i class="fas fa-music text-[14px]"></i>
+                                    </span>
+                                    <div class="flex-1 min-w-0">
+                                        <p v-if="!form.file" class="text-[12.5px] font-semibold text-gray-600">
+                                            Glissez votre Audio ou cliquez pour parcourir
                                         </p>
                                     </div>
                                     <button v-if="form.file" type="button" @click.stop="clearPdf"
@@ -354,7 +418,7 @@
                                 </p>
                             </div>
                             <span class="text-[10px] font-bold px-2.5 py-1 rounded-full shrink-0"
-                                style="background:#FEE2E2; color:#DC2626">PDF</span>
+                                style="background:#FEE2E2; color:#DC2626">{{ form.format }}</span>
                         </div>
                     </div>
 
@@ -404,13 +468,14 @@ const form = useForm<Form>({
     duration: '',
     price: null as number | null,
     image: null as File | null,
-    format: 'PDF',
+    format: 'pdf',
     progression: 0,
     icon: 'fas fa-book',
     color: '#D97706',
     level: '',
     file: null as File | null,
 })
+
 
 /* ── File state ── */
 const imageInput = ref<HTMLInputElement | null>(null)
@@ -441,9 +506,9 @@ const categories = [
 ]
 const levels = ['Débutant', 'Intermédiaire', 'Avancé', 'Expert']
 const formats = [
-    { label: 'PDF', value: 'PDF', icon: 'fas fa-file-pdf' },
-    { label: 'Vidéo', value: 'Vidéo', icon: 'fas fa-circle-play' },
-    { label: 'Audio', value: 'Audio', icon: 'fas fa-headphones' },
+    { label: 'PDF', value: 'pdf', icon: 'fas fa-file-pdf' },
+    { label: 'Vidéo', value: 'video', icon: 'fas fa-circle-play' },
+    { label: 'Audio', value: 'audio', icon: 'fas fa-headphones' },
 ]
 const iconOptions = [
     'fas fa-book', 'fas fa-file-pdf', 'fas fa-graduation-cap', 'fas fa-laptop-code',

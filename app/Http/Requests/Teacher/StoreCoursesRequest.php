@@ -30,12 +30,12 @@ class StoreCoursesRequest extends FormRequest
             'duration' => ['required', 'string'],
             'price' => ['nullable', 'numeric'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
-            'format' => ['required', 'string'],
+            'format' => ['required', 'string', 'in:pdf,audio,video'],
             'progress' => ['nullable', 'integer'],
             'icon' => ['nullable', 'string'],
             'color' => ['required', 'string'],
             'level' => ['required', 'string'],
-            'file' => ['required', 'file', 'mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,zip,rar'],
+            'file' => ['required', 'file'],
         ];
     }
 
@@ -65,7 +65,6 @@ class StoreCoursesRequest extends FormRequest
             'level.string' => 'Le niveau doit être une chaîne de caractères.',
             'file.required' => 'Le fichier est obligatoire.',
             'file.file' => 'Le fichier doit être un fichier valide.',
-            'file.mimes' => 'Le fichier doit être un des types suivants: pdf, doc, docx, ppt, pptx, xls, xlsx, zip, rar.',
         ];
     }
 }
