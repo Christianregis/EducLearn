@@ -16,7 +16,7 @@
                                 Enseignant</span>
                         </div>
                         <h1 class="text-[24px] font-extrabold text-gray-900 leading-tight tracking-tight">
-                            Bonjour, {{ firstName }} 
+                            Bonjour, {{ firstName }}
                         </h1>
                         <p class="text-[13px] text-gray-400 mt-1">
                             {{ today }} — voici l'état de vos cours en temps réel.
@@ -39,10 +39,6 @@
                             <span class="w-9 h-9 rounded-xl flex items-center justify-center text-[13px]"
                                 :style="`background:${kpi.iconBg}; color:${kpi.iconColor}`">
                                 <i :class="kpi.icon"></i>
-                            </span>
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                                :style="`background:${kpi.badgeBg}; color:${kpi.badgeColor}`">
-                                {{ kpi.badge }}
                             </span>
                         </div>
                         <div>
@@ -149,7 +145,7 @@
                         </div>
 
                         <!-- Top students -->
-                        <div class="bg-white rounded-2xl border border-gray-100/80 p-5 flex-1">
+                        <!-- <div class="bg-white rounded-2xl border border-gray-100/80 p-5 flex-1">
                             <div class="flex items-center justify-between mb-4">
                                 <h2 class="text-[14px] font-bold text-gray-900">Top étudiants</h2>
                                 <span class="text-[10px] text-gray-400 font-medium">cette semaine</span>
@@ -182,7 +178,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
                     <!-- /RIGHT COLUMN -->
@@ -190,7 +186,7 @@
                 <!-- /MAIN GRID -->
 
                 <!-- ── BOTTOM BAND: Recent Activity ── -->
-                <div class="mt-5 bg-white rounded-2xl border border-gray-100/80 px-5 py-4">
+                <!-- <div class="mt-5 bg-white rounded-2xl border border-gray-100/80 px-5 py-4">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-[14px] font-bold text-gray-900">Activité récente</h2>
                         <span class="text-[10px] text-gray-400">Aujourd'hui</span>
@@ -209,7 +205,7 @@
                             <span class="text-[10px] text-gray-300 font-medium shrink-0 mt-0.5">{{ event.time }}</span>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
             </main>
         </div>
@@ -326,22 +322,6 @@ const quickActions = [
     { label: 'Voir les stats', icon: 'fas fa-chart-bar', bg: '#F5F3FF', color: '#7C3AED' },
 ]
 
-/* ── Top students ── */
-const topStudents = [
-    { name: 'Amina Diallo', initials: 'AD', progress: 94, avatarColor: '#F4B400' },
-    { name: 'Lucas Martin', initials: 'LM', progress: 87, avatarColor: '#3B82F6' },
-    { name: 'Fatou Ndiaye', initials: 'FN', progress: 82, avatarColor: '#10B981' },
-    { name: 'Youssef Benali', initials: 'YB', progress: 76, avatarColor: '#7C3AED' },
-    { name: 'Marie-Claire D.', initials: 'MC', progress: 71, avatarColor: '#EA580C' },
-]
-
-/* ── Recent activity ── */
-const recentActivity = [
-    { id: 1, title: 'Amina Diallo a terminé "JavaScript Avancé"', subtitle: 'Cours Vidéo · Certificat généré', icon: 'fas fa-trophy', iconBg: '#FEF3C7', iconColor: '#D97706', time: 'il y a 8 min' },
-    { id: 2, title: '5 nouveaux inscrits sur "React 18"', subtitle: 'Total : 134 étudiants', icon: 'fas fa-user-plus', iconBg: '#ECFDF5', iconColor: '#059669', time: 'il y a 22 min' },
-    { id: 3, title: 'Nouveau commentaire sur votre PDF "UX/UI"', subtitle: 'Lucas Martin : "Excellent contenu, très clair !"', icon: 'fas fa-comment-dots', iconBg: '#EFF6FF', iconColor: '#3B82F6', time: 'il y a 1h' },
-    { id: 4, title: 'Votre audio "Python DataSci" a été approuvé', subtitle: 'Désormais visible par les étudiants', icon: 'fas fa-circle-check', iconBg: '#ECFDF5', iconColor: '#059669', time: 'il y a 3h' },
-]
 </script>
 
 <style scoped>

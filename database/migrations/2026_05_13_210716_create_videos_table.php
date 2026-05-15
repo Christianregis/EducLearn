@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('description')->nullable();
+            $table->string('category')->nullable();
             $table->unsignedBigInteger('teacher_id');
+
             $table->foreign('teacher_id')->references('id')->on('users');
 
             $table->integer('progress')->default(0);

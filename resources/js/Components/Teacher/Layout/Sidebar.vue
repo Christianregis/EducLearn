@@ -28,7 +28,7 @@
         <nav class="flex-1 overflow-y-auto px-3 py-5 scrollbar-none">
 
             <!-- Dashboard -->
-            <a href="#"
+            <Link :href="teacherDashboard()"
                 class="group flex items-center gap-3 px-3.5 py-3 rounded-xl text-white hover:bg-white/5 transition-all duration-200 mb-1">
 
                 <span
@@ -39,7 +39,7 @@
                 <span class="text-[13px] font-medium">
                     Tableau de bord
                 </span>
-            </a>
+            </Link>
 
             <!-- SECTION -->
             <p class="sidebar-section">
@@ -191,7 +191,10 @@
 </template>
 
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue'
+import { teacherDashboard } from '@/routes';
+
 
 /* ── Types ── */
 interface User {
