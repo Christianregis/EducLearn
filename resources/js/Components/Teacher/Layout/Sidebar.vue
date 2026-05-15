@@ -85,7 +85,7 @@
             </Link>
 
             <!-- Voir Audio -->
-            <Link href="#" class="sidebar-link">
+            <Link :href="teacherCoursesAudios()" class="sidebar-link">
 
                 <span class="sidebar-icon">
                     <i class="fas fa-headphones"></i>
@@ -114,7 +114,7 @@
             </Link>
 
             <!-- Voir Videos -->
-            <Link href="#" class="sidebar-link">
+            <Link :href="teacherCoursesVideos()" class="sidebar-link">
 
                 <span class="sidebar-icon">
                     <i class="fas fa-video"></i>
@@ -185,7 +185,7 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue'
-import { teacherCourses, teacherCoursesCreate, teacherDashboard } from '@/routes';
+import { teacherCourses, teacherCoursesAudios, teacherCoursesCreate, teacherCoursesVideos, teacherDashboard } from '@/routes';
 
 
 /* ── Types ── */

@@ -22,17 +22,17 @@ class CourseController extends Controller
         ]);
     }
 
-    public function indexVideos()
+    public function indexVideo()
     {
         return Inertia::render('Teacher/Video/Index', [
-            'videos' => CourseResource::collection(Video::with('enrollements')->where('teacher_id', Auth::user()->id)->latest()->get())
+            'books' => CourseResource::collection(Video::with('enrollements')->where('teacher_id', Auth::user()->id)->latest()->get())
         ]);
     }
 
     public function indexAudio()
     {
-        return Inertia::render('Teacher/Video/Index', [
-            'audios' => CourseResource::collection(Audio::with('enrollements')->where('teacher_id', Auth::user()->id)->latest()->get())
+        return Inertia::render('Teacher/Audio/Index', [
+            'books' => CourseResource::collection(Audio::with('enrollements')->where('teacher_id', Auth::user()->id)->latest()->get())
         ]);
     }
 

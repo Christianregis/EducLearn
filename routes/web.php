@@ -40,13 +40,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/teacher', function () {
 
-        $courses = Course::where('teacher_id', Auth::user()->id)->limit(5)->get();
+        $courses = [...Course::where('teacher_id', Auth::user()->id)->limit(5)->get(), ...Video::where('teacher_id', Auth::user()->id)->limit(5)->get()];
+
         return Inertia::render('Teacher/Index', [
             'statistics' => [
                 'countCourses' => Course::where('teacher_id', Auth::user()->id)->count()
                     + Audio::where('teacher_id', Auth::user()->id)->count()
                     + Video::where('teacher_id', Auth::user()->id)->count(),
             ],
+            
             'courses' => CoursesDashboardResource::collection($courses)
         ]);
     })->name('teacherDashboard');
@@ -55,6 +57,9 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/teacher/courses/create', [CourseController::class, 'create'])->name('teacherCoursesCreate');
     Route::post('/teacher/courses', [CourseController::class, 'store'])->name('teacherCoursesStore');
     Route::delete('/teacher/courses/{course_id}', [CourseController::class, 'delete'])->name('teacherCourseDelete');
+
+    Route::get('/teacher/courses/videos', [CourseController::class, 'indexVideo'])->name('teacherCoursesVideos');
+    Route::get('/teacher/courses/audios', [CourseController::class, 'indexAudio'])->name('teacherCoursesAudios');
 });
 
 Route::middleware(['auth', 'role:student'])->group(function () {
