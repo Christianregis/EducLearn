@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, ref } from 'vue'
 
 const searchQuery = ref('')
@@ -23,91 +23,291 @@ interface User {
     }
 }
 
-defineProps<User>()
+const props = defineProps<User>()
+
+/* ───────── STATES ───────── */
+const showNotifications = ref(false)
+const showUserMenu = ref(false)
+
+/* ───────── USER INITIALS ───────── */
+const userInitials = computed(() => {
+    return props.user.name
+        .split(' ')
+        .slice(0, 2)
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+})
+
+/* ───────── NOTIFICATIONS ───────── */
+const notifications = ref([
+    {
+        id: 1,
+        title: 'Nouveau cours disponible',
+        time: 'il y a 10 min',
+        icon: 'fas fa-book-open',
+        iconClass: 'bg-blue-50 text-blue-500',
+        read: false
+    },
+    {
+        id: 2,
+        title: 'Votre certificat est prêt',
+        time: 'il y a 1h',
+        icon: 'fas fa-award',
+        iconClass: 'bg-amber-50 text-amber-500',
+        read: false
+    },
+    {
+        id: 3,
+        title: 'Message reçu du professeur',
+        time: 'hier',
+        icon: 'fas fa-envelope',
+        iconClass: 'bg-emerald-50 text-emerald-500',
+        read: true
+    }
+])
+
+const unreadCount = computed(() =>
+    notifications.value.filter((n) => !n.read).length
+)
+
+/* ───────── ACTIONS ───────── */
+function toggleNotifications() {
+    showNotifications.value = !showNotifications.value
+    showUserMenu.value = false
+}
+
+function toggleUserMenu() {
+    showUserMenu.value = !showUserMenu.value
+    showNotifications.value = false
+}
 </script>
 
 <template>
-    <!-- ── TOP NAVBAR ── -->
-    <header class="h-18 bg-dark-50  px-7 flex items-center justify-between shrink-0">
+    <header
+        class="h-[64px] shrink-0 flex items-center justify-between px-7 bg-white border-b border-gray-100/80 relative z-10">
 
-        <!-- LEFT -->
-        <div class="flex items-center gap-3 min-w-0">
+        <!-- ───────── LEFT ───────── -->
+        <div class="flex items-center gap-3">
 
             <!-- Breadcrumb -->
-            <div class="flex items-center gap-2 text-[13px]">
+            <div class="hidden sm:flex items-center gap-2 text-[12px] text-gray-400 font-medium">
 
-                <div class="w-8 h-8 rounded-xl bg-brand/15 text-brand-dark flex items-center justify-center">
-                    <i class="fas fa-home text-[12px]"></i>
-                </div>
+                <span class="text-gray-300">
+                    Educ-Learn
+                </span>
 
-                <span class="text-dark-300 font-medium">/</span>
+                <i class="fas fa-chevron-right text-[9px] text-gray-200"></i>
 
-                <span class="font-semibold text-dark truncate">
+                <span class="text-amber-500 font-semibold truncate">
                     {{ currentPageLabel }}
                 </span>
             </div>
-
         </div>
 
-        <!-- RIGHT -->
-        <div class="flex items-center gap-3">
+        <!-- ───────── SEARCH ───────── -->
+        <div class="flex-1 max-w-xs mx-6 hidden md:block">
 
-            <!-- Search -->
-            <div
-                class="hidden md:flex items-center h-11 w-70 bg-dark-50 rounded-2xl px-4 transition-all duration-200 focus-within:border-brand focus-within:bg-white">
+            <div class="relative">
 
-                <i class="fas fa-search text-[13px] text-dark-300"></i>
+                <i
+                    class="fas fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 text-[11px]"></i>
 
-                <input type="text" v-model="searchQuery" placeholder="Rechercher un cours..."
-                    class="flex-1 bg-transparent border-none outline-none text-[13px] text-dark placeholder:text-dark-300 px-3" />
+                <input v-model="searchQuery" type="text" placeholder="Rechercher un cours, certificat..."
+                    class="w-full bg-gray-50 border border-gray-100 text-[12.5px] text-gray-700 placeholder-gray-300 pl-9 pr-4 py-2 rounded-xl outline-none focus:border-amber-300 focus:bg-white focus:ring-2 focus:ring-amber-100 transition-all" />
+
+                <kbd
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] text-gray-300 bg-gray-100 rounded px-1 py-0.5 font-mono hidden lg:block">
+                    ⌘K
+                </kbd>
             </div>
+        </div>
+
+        <!-- ───────── RIGHT ───────── -->
+        <div class="flex items-center gap-2">
+
+            <!-- Quick Action -->
+            <button
+                class="hidden sm:inline-flex items-center gap-2 text-[12px] font-bold px-4 py-2 rounded-[10px] transition-all duration-200 border-none cursor-pointer bg-linear-to-r from-yellow-400 to-orange-500 text-[#0F1117] shadow-lg shadow-yellow-500/20">
+
+                <i class="fas fa-book-open text-[10px]"></i>
+
+                Mes cours
+            </button>
 
             <!-- Notifications -->
-            <button class="relative w-11 h-11 rounded-2xl bg-white
-                       hover:bg-dark-50 text-dark-400 hover:text-dark
-                       flex items-center justify-center transition-colors duration-200">
+            <button
+                class="relative w-9 h-9 flex items-center justify-center rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-all border border-gray-100"
+                @click="toggleNotifications">
 
-                <i class="fas fa-bell text-[14px]"></i>
+                <i class="fas fa-bell text-[13px]"></i>
 
-                <span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-red-500 border-2 border-white">
-                </span>
+                <span v-if="unreadCount > 0"
+                    class="absolute top-1.5 right-1.5 w-[7px] h-[7px] rounded-full bg-amber-400 border-2 border-white"></span>
             </button>
 
-            <!-- Messages -->
-            <button class="w-11 h-11 rounded-2xl bg-white
-                       hover:bg-dark-50 text-dark-400 hover:text-dark
-                       flex items-center justify-center transition-colors duration-200">
+            <!-- Notification Dropdown -->
+            <Transition name="dropdown">
+                <div v-if="showNotifications"
+                    class="absolute top-[68px] right-16 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
 
-                <i class="fas fa-envelope text-[14px]"></i>
-            </button>
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 border-b border-gray-50">
 
-            <!-- Profile -->
-            <button class="flex items-center gap-3 pl-2 pr-3 h-11 rounded-2xl
-                       hover:bg-dark-50 transition-colors duration-200">
+                        <p class="text-[13px] font-bold text-gray-800">
+                            Notifications
+                        </p>
 
-                <!-- Avatar -->
-                <div class="w-10 h-10 rounded-xl bg-linear-to-br from-brand to-amber-400
-                           flex items-center justify-center text-dark font-bold text-[13px] shadow-sm">
+                        <span class="text-[10px] bg-amber-100 text-amber-600 font-bold rounded-full px-2 py-0.5">
 
-                    {{ user.name[0].toUpperCase() }}
+                            {{ unreadCount }} nouvelles
+                        </span>
+                    </div>
+
+                    <!-- Notifications -->
+                    <div class="divide-y divide-gray-50 max-h-64 overflow-y-auto">
+
+                        <div v-for="notif in notifications" :key="notif.id"
+                            class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50/70 cursor-pointer transition-colors">
+
+                            <span
+                                class="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] shrink-0 mt-0.5"
+                                :class="notif.iconClass">
+
+                                <i :class="notif.icon"></i>
+                            </span>
+
+                            <div>
+
+                                <p class="text-[12px] font-semibold text-gray-700">
+                                    {{ notif.title }}
+                                </p>
+
+                                <p class="text-[11px] text-gray-400 mt-0.5">
+                                    {{ notif.time }}
+                                </p>
+                            </div>
+
+                            <span v-if="!notif.read"
+                                class="ml-auto w-2 h-2 rounded-full bg-amber-400 shrink-0 mt-2"></span>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="px-4 py-2.5 border-t border-gray-50">
+
+                        <button
+                            class="w-full text-center text-[11px] font-semibold text-amber-500 hover:text-amber-600 transition-colors">
+
+                            Voir tout
+                        </button>
+                    </div>
                 </div>
+            </Transition>
 
-                <!-- User -->
-                <div class="hidden lg:block text-left leading-tight">
+            <!-- Overlay -->
+            <div v-if="showNotifications" class="fixed inset-0 z-40" @click="showNotifications = false"></div>
 
-                    <p class="text-[13px] font-bold text-dark">
+            <!-- ───────── USER MENU ───────── -->
+            <div class="relative">
+
+                <button
+                    class="flex items-center gap-2.5 pl-2.5 pr-3 py-1.5 rounded-xl hover:bg-gray-50 border border-transparent hover:border-gray-100 transition-all group"
+                    @click="toggleUserMenu">
+
+                    <!-- Avatar -->
+                    <div
+                        class="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold text-[#0F1117] shrink-0 bg-linear-to-br from-yellow-400 to-orange-500">
+
+                        {{ userInitials }}
+                    </div>
+
+                    <!-- Name -->
+                    <span
+                        class="hidden lg:block text-[12.5px] font-semibold text-gray-700 group-hover:text-gray-900 transition-colors">
+
                         {{ user.name }}
-                    </p>
+                    </span>
 
-                    <p class="text-[11px] text-dark-400">
-                        Étudiant
-                    </p>
-                </div>
+                    <!-- Chevron -->
+                    <i class="fas fa-chevron-down text-[9px] text-gray-300 group-hover:text-gray-400 transition-all"
+                        :class="{ 'rotate-180': showUserMenu }"></i>
+                </button>
 
-                <!-- Chevron -->
-                <i class="fas fa-chevron-down text-[11px] text-dark-300 hidden lg:block"></i>
-            </button>
+                <!-- Dropdown -->
+                <Transition name="dropdown">
+                    <div v-if="showUserMenu"
+                        class="absolute top-12 right-0 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden py-1.5">
 
+                        <!-- User Infos -->
+                        <div class="px-4 py-2.5 border-b border-gray-50 mb-1">
+
+                            <p class="text-[12px] font-bold text-gray-800">
+                                {{ user.name }}
+                            </p>
+
+                            <p class="text-[10px] text-gray-400 mt-0.5">
+                                {{ user.email }}
+                            </p>
+                        </div>
+
+                        <!-- Profile -->
+                        <button
+                            class="w-full flex items-center gap-2.5 px-4 py-2 text-[12px] text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+
+                            <i class="fas fa-user-circle text-gray-300 w-4 text-center"></i>
+
+                            Mon profil
+                        </button>
+
+                        <!-- Certificates -->
+                        <button
+                            class="w-full flex items-center gap-2.5 px-4 py-2 text-[12px] text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+
+                            <i class="fas fa-award text-gray-300 w-4 text-center"></i>
+
+                            Mes certificats
+                        </button>
+
+                        <!-- Settings -->
+                        <button
+                            class="w-full flex items-center gap-2.5 px-4 py-2 text-[12px] text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+
+                            <i class="fas fa-gear text-gray-300 w-4 text-center"></i>
+
+                            Paramètres
+                        </button>
+
+                        <!-- Logout -->
+                        <div class="border-t border-gray-50 mt-1 pt-1">
+
+                            <button
+                                class="w-full flex items-center gap-2.5 px-4 py-2 text-[12px] text-red-400 hover:bg-red-50 transition-colors">
+
+                                <i class="fas fa-right-from-bracket w-4 text-center"></i>
+
+                                Déconnexion
+                            </button>
+                        </div>
+                    </div>
+                </Transition>
+
+                <!-- Overlay -->
+                <div v-if="showUserMenu" class="fixed inset-0 z-40" @click="showUserMenu = false"></div>
+            </div>
         </div>
     </header>
 </template>
+
+<style scoped>
+.dropdown-enter-active,
+.dropdown-leave-active {
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+    opacity: 0;
+    transform: translateY(-6px);
+}
+</style>
