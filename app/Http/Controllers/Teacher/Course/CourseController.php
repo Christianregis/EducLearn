@@ -100,9 +100,27 @@ class CourseController extends Controller
         return redirect()->back()->with('success', 'Cours créé avec succès.');
     }
 
-    function delete(mixed $course_id)
+    function deleteCourse(mixed $course_id)
     {
         $course = Course::where('id', $course_id)->firstOrFail();
+        Storage::delete('/storage/' . $course->image);
+        Storage::delete('/storage/' . $course->file);
+        $course->delete();
+        return redirect()->back()->with('success', 'Suppression reussie !');
+    }
+
+    function deleteVideo(mixed $course_id)
+    {
+        $course = Video::where('id', $course_id)->firstOrFail();
+        Storage::delete('/storage/' . $course->image);
+        Storage::delete('/storage/' . $course->file);
+        $course->delete();
+        return redirect()->back()->with('success', 'Suppression reussie !');
+    }
+
+    function deleteAudio(mixed $course_id)
+    {
+        $course = Audio::where('id', $course_id)->firstOrFail();
         Storage::delete('/storage/' . $course->image);
         Storage::delete('/storage/' . $course->file);
         $course->delete();

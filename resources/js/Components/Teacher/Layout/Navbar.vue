@@ -122,11 +122,11 @@
                             <i class="fas fa-gear text-gray-300 w-4 text-center"></i> Paramètres
                         </button>
                         <div class="border-t border-gray-50 mt-1 pt-1">
-                            <button
+                            <Link
                                 class="w-full flex items-center gap-2.5 px-4 py-2 text-[12px] text-red-400 hover:bg-red-50 transition-colors"
-                                @click="'#'">
+                                :href="logout()">
                                 <i class="fas fa-right-from-bracket w-4 text-center"></i> Déconnexion
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </Transition>
@@ -140,7 +140,7 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { ref, computed } from 'vue'
-import { teacherCoursesCreate } from '@/routes';
+import { logout, teacherCoursesCreate } from '@/routes';
 
 
 /* ── Types ── */

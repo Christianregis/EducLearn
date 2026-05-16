@@ -166,7 +166,7 @@
             </div>
 
             <!-- Logout -->
-            <Link href="#"
+            <Link :href="logout()"
                 class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] font-medium text-red-300 hover:text-red-200 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all duration-200 group">
 
                 <span
@@ -185,7 +185,7 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue'
-import { teacherCourses, teacherCoursesAudios, teacherCoursesCreate, teacherCoursesVideos, teacherDashboard } from '@/routes';
+import { logout, teacherCourses, teacherCoursesAudios, teacherCoursesCreate, teacherCoursesVideos, teacherDashboard } from '@/routes';
 
 
 /* ── Types ── */

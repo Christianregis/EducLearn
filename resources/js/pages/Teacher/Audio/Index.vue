@@ -399,7 +399,7 @@
                             class="flex-1 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-[13px] font-bold text-gray-700 hover:bg-gray-100 transition-all cursor-pointer">
                             Annuler
                         </button>
-                        <Link :href="teacherCourseDelete(bookToDelete.id)" :method="'delete'"
+                        <Link :href="teacherCourseAudioDelete(bookToDelete.id)" :method="'delete'" @click="bookToDelete = null"
                             class="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-[13px] font-bold transition-all cursor-pointer border-none text-center no-underline block">
                             Supprimer
                         </Link>
@@ -416,7 +416,7 @@ import { ref, computed } from 'vue'
 import FlashMessage from '@/Components/FlashMessage.vue'
 import Navbar from '@/Components/Teacher/Layout/Navbar.vue'
 import Sidebar from '@/Components/Teacher/Layout/Sidebar.vue'
-import { teacherCourseDelete, teacherCoursesCreate } from '@/routes'
+import {teacherCourseAudioDelete, teacherCoursesCreate } from '@/routes'
 
 /* ── Auth ── */
 interface User { name: string; email: string }

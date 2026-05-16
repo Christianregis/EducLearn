@@ -71,9 +71,9 @@
                 <!-- /KPI GRID -->
 
                 <!-- ── CHARTS ROW ── -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6" border-amber-100>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
                     <!-- Bar Chart -->
-                    <div class="bg-white rounded-2xl p-5">
+                    <div class="bg-white rounded-2xl p-5 border-amber-100">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-sm font-semibold text-dark">
                                 Activité hebdomadaire

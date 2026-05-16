@@ -24,7 +24,7 @@ class CoursesDashboardResource extends JsonResource
             'iconColor' => $this->color,
             'color' => $this->color,
             'level' => $this->level,
-            'students' => $this->whenLoaded('enrollements',fn()=> $this->enrollements->count()),
+            'students' => $this->whenLoaded('enrollements',fn()=> $this->enrollements->count()) ?? 0,
             'status' => 'Publié'
         ];
     }

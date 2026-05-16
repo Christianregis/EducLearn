@@ -21,6 +21,7 @@ class Audio extends Model
         'progress',
         'description',
         'category',
+        'format',
         'icon',
         'color',
         'level',

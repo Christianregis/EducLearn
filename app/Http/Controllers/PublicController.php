@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Resources\Public\Course\CatalogResource;
+use App\Models\Audio;
+use App\Models\Course;
+use App\Models\Video;
 use Inertia\Inertia;
 
 class PublicController extends Controller
@@ -14,6 +17,13 @@ class PublicController extends Controller
 
     public function catalog()
     {
-        return Inertia::render('Catalog');
+        $products = [
+            ...Course::with('enrollements')->get(),
+            ...Video::with('enrollements')->get(),
+            ...Audio::with('enrollements')->get(),
+        ];
+        return Inertia::render('Catalog',[
+            'products' => CatalogResource::collection($products),
+        ]);
     }
 }

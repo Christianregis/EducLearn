@@ -48,7 +48,7 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
                     + Audio::where('teacher_id', Auth::user()->id)->count()
                     + Video::where('teacher_id', Auth::user()->id)->count(),
             ],
-            
+
             'courses' => CoursesDashboardResource::collection($courses)
         ]);
     })->name('teacherDashboard');
@@ -56,7 +56,10 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/teacher/courses', [CourseController::class, 'index'])->name('teacherCourses');
     Route::get('/teacher/courses/create', [CourseController::class, 'create'])->name('teacherCoursesCreate');
     Route::post('/teacher/courses', [CourseController::class, 'store'])->name('teacherCoursesStore');
-    Route::delete('/teacher/courses/{course_id}', [CourseController::class, 'delete'])->name('teacherCourseDelete');
+
+    Route::delete('/teacher/courses/pdf/{course_id}', [CourseController::class, 'deleteCourse'])->name('teacherCourseDelete');
+    Route::delete('/teacher/courses/video/{course_id}', [CourseController::class, 'deleteVideo'])->name('teacherCourseVideoDelete');
+    Route::delete('/teacher/courses/audi0/{course_id}', [CourseController::class, 'deleteAudio'])->name('teacherCourseAudioDelete');
 
     Route::get('/teacher/courses/videos', [CourseController::class, 'indexVideo'])->name('teacherCoursesVideos');
     Route::get('/teacher/courses/audios', [CourseController::class, 'indexAudio'])->name('teacherCoursesAudios');
@@ -71,7 +74,3 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('/student/videos', [ProductController::class, 'indexVideos'])->name('studentVideos');
     Route::get('/student/audios', [ProductController::class, 'indexAudios'])->name('studentAudios');
 });
-
-Route::get('/catalog', function () {
-    return Inertia::render('Catalog');
-})->name('catalog');

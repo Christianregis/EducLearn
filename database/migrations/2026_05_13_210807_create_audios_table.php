@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('duration');
             $table->double('price')->nullable();
             $table->string('image')->nullable();
+            $table->string('format');
+
             $table->integer('progress')->default(0);
             $table->string('icon')->nullable();
             $table->string('color')->nullable();

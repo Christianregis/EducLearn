@@ -21,6 +21,7 @@ class Video extends Model
         'progress',
         'description',
         'category',
+        'format',
         'icon',
         'color',
         'level',

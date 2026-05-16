@@ -100,104 +100,14 @@ import Footer from '@/Components/Public/Footer.vue'
 import Navigation from '@/Components/Public/Navigation.vue'
 import type { Product } from '@/types/Product'
 
-
-// Mock Data
-const allProducts: Product[] = [
-    {
-        id: 1,
-        title: 'Web Design Mastery',
-        students: 3250,
-        duration: '4h 30m',
-        price: 45.99,
-        oldPrice: 89.99,
-        level: 'Débutant',
-        image: 'https://placehold.co/400x300/ddd6fe/7c3aed?text=Web+Design',
-        format: 'Video'
-    },
-    {
-        id: 2,
-        title: 'Education Software and PHP and JS System Script',
-        students: 4280,
-        duration: '2h 15m',
-        price: 33.99,
-        oldPrice: 69.99,
-        level: 'Intermédiaire',
-        image: 'https://placehold.co/400x300/fef3c7/78350f?text=PHP+JS+System',
-        format: 'Video'
-    },
-    {
-        id: 3,
-        title: 'The Complete Financial Analyst Training & Investing',
-        students: 5957,
-        duration: '5h 49m',
-        price: 45.99,
-        level: 'Avancé',
-        image: 'https://placehold.co/400x300/fce7f3/be185d?text=Financial+Analyst',
-        format: 'Audio'
-    },
-    {
-        id: 4,
-        title: 'Digital Marketing Fundamentals',
-        students: 2150,
-        duration: '3h 20m',
-        price: 29.99,
-        level: 'Débutant',
-        image: 'https://placehold.co/400x300/fef3c7/d97706?text=Digital+Marketing',
-        format: 'PDF'
-    },
-    {
-        id: 5,
-        title: 'Advanced JavaScript Patterns',
-        students: 3890,
-        duration: '4h 45m',
-        price: 55.99,
-        oldPrice: 99.99,
-        level: 'Avancé',
-        image: 'https://placehold.co/400x300/fef3c7/f59e0b?text=JavaScript',
-        format: 'Video'
-    },
-    {
-        id: 6,
-        title: 'UI/UX Design Principles',
-        students: 2780,
-        duration: '3h 15m',
-        price: 39.99,
-        level: 'Intermédiaire',
-        image: 'https://placehold.co/400x300/ddd6fe/6366f1?text=UI+UX+Design',
-        format: 'Video'
-    },
-    {
-        id: 7,
-        title: 'Python for Data Science',
-        students: 6420,
-        duration: '6h 30m',
-        price: 49.99,
-        oldPrice: 99.99,
-        level: 'Intermédiaire',
-        image: 'https://placehold.co/400x300/fef3c7/ca8a04?text=Python+Data',
-        format: 'Audio'
-    },
-    {
-        id: 8,
-        title: 'SEO Mastery Course',
-        students: 1950,
-        duration: '2h 40m',
-        price: 34.99,
-        level: 'Débutant',
-        image: 'https://placehold.co/400x300/fef3c7/b45309?text=SEO+Mastery',
-        format: 'PDF'
-    },
-    {
-        id: 9,
-        title: 'Cloud Architecture with AWS',
-        students: 4560,
-        duration: '5h 20m',
-        price: 59.99,
-        level: 'Avancé',
-        image: 'https://placehold.co/400x300/fef3c7/92400e?text=AWS+Cloud',
-        format: 'Video'
+interface Props {
+    products: {
+        data: Product[]
     }
-]
+}
+const props = defineProps<Props>()
+// Mock Data
+const allProducts: Product[] = props.products.data
 
 const filteredProducts = ref<Product[]>(allProducts)
 const currentFilters = ref({

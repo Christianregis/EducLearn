@@ -60,9 +60,9 @@
             <!-- Price & Button -->
             <div class="flex items-center justify-between gap-2 pt-3 border-t border-yellow-100">
                 <div class="flex flex-col">
-                    <span class="text-lg font-bold text-gray-900">${{ product.price.toFixed(2) }}</span>
+                    <span class="text-lg font-bold text-gray-900">${{ product.price }}</span>
                     <span v-if="product.oldPrice" class="text-xs text-gray-400 line-through">
-                        ${{ product.oldPrice.toFixed(2) }}
+                        ${{ product.oldPrice }}
                     </span>
                 </div>
                 <button @click="addToCart" :disabled="isLoading"

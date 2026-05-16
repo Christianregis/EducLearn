@@ -30,8 +30,8 @@ class CourseResource extends JsonResource
             'level' => $this->level,
             'file' => asset('/storage/'. $this->file),
             'students' => $this->whenLoaded('enrollements', function(){
-                $this->enrollements->count() ?? 0;
-            }),
+                $this->enrollements->count();
+            }) ?? 0,
             'status' => 'Publié'
         ];
     }
