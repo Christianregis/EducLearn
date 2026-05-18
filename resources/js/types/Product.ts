@@ -7,5 +7,6 @@ export interface Product {
     oldPrice?: number
     level: 'Débutant' | 'Intermédiaire' | 'Avancé'
     image: string
+    file: string
     format: 'Audio' | 'Video' | 'PDF'
 }

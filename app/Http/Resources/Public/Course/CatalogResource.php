@@ -30,6 +30,7 @@ class CatalogResource extends JsonResource
                 CourseTypeEnum::VIDEO->value => 'Video',
                 default => 'Inconnu',
             },
+            'file' => asset('/storage/' . $this->file),
         ];
     }
 }

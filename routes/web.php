@@ -4,9 +4,11 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\Student\Product\ProductController;
 use App\Http\Controllers\Teacher\Course\CourseController;
+use App\Http\Resources\Teacher\Courses\CourseResource;
 use App\Http\Resources\Teacher\Courses\CoursesDashboardResource;
 use App\Models\Audio;
 use App\Models\Course;
+use App\Models\Enrollement;
 use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -40,16 +42,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/teacher', function () {
 
-        $courses = [...Course::where('teacher_id', Auth::user()->id)->limit(5)->get(), ...Video::where('teacher_id', Auth::user()->id)->limit(5)->get()];
+        $courses = [...Course::where('teacher_id', Auth::user()->id)->limit(5)->get(), ...Video::where('teacher_id', Auth::user()->id)->limit(5)->get(), ...Audio::where('teacher_id', Auth::user()->id)];
 
         return Inertia::render('Teacher/Index', [
             'statistics' => [
-                'countCourses' => Course::where('teacher_id', Auth::user()->id)->count()
-                    + Audio::where('teacher_id', Auth::user()->id)->count()
+                'countCourses' => Course::where('teacher_id', Auth::user()->id)->count(),
+                    + Audio::where('teacher_id', Auth::user()->id)->count(),
                     + Video::where('teacher_id', Auth::user()->id)->count(),
             ],
 
-            'courses' => CoursesDashboardResource::collection($courses)
+            'courses' => CoursesDashboardResource::collection($courses),
         ]);
     })->name('teacherDashboard');
 
@@ -66,9 +68,19 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:student'])->group(function () {
+
     Route::get('/student', function () {
-        return Inertia::render('Student/Index');
+        $courses = [...Course::where('teacher_id', Auth::user()->id)->limit(5)->get(), ...Video::where('teacher_id', Auth::user()->id)->limit(5)->get(), ...Audio::where('teacher_id', Auth::user()->id)->limit(5)->get()];
+
+        $enrollements = Enrollement::with(['audios', 'video', 'audio', 'course'])->where('student_id', '=', Auth::user()->id)->get();
+
+        return Inertia::render('Student/Index',[
+            'courses' => CourseResource::collection($courses),
+        ]);
+
     })->name('studentDashboard');
+
+    Route::post('/student/courses/makeEnrollement', [ProductController::class, 'makeEnrollement'])->name('studentCoursesMakeEnrollement');
 
     Route::get('/student/courses', [ProductController::class, 'indexBooks'])->name('studentCourses');
     Route::get('/student/videos', [ProductController::class, 'indexVideos'])->name('studentVideos');

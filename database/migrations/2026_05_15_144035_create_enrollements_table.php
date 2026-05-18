@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('enrollements', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('student_id');
-            $table->unsignedBigInteger('course_id');
-            $table->unsignedBigInteger('video_id');
-            $table->unsignedBigInteger('audio_id');
+            $table->unsignedBigInteger('course_id')->nullable();
+            $table->unsignedBigInteger('video_id')->nullable();
+            $table->unsignedBigInteger('audio_id')->nullable();
 
             $table->foreign('student_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');

@@ -2,6 +2,7 @@
     <div class="min-h-screen bg-linear-to-b from-white via-yellow-50 to-white">
         <!-- Navbar -->
         <Navigation />
+        <FlashMessage />
 
         <!-- Main Content -->
         <main class="pt-24 pb-12">
@@ -340,11 +341,16 @@
                                 <i class="fas fa-lock text-[11px]"></i>
                                 Acheter · {{ selectedProduct.price }} €
                             </button>
-                            <button v-else
+                            <button v-else @click="
+                                user
+                                    ? handleEnrolledNow(selectedProduct.id, selectedProduct.format)
+                                    : router.visit(showLogin.url())
+                                "
                                 class="w-full py-3 rounded-xl text-[14px] font-bold transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
                                 style="background:linear-gradient(135deg,#10B981 0%,#059669 100%); color:#fff; box-shadow:0 4px 14px rgba(16,185,129,0.30)">
-                                <i class="fas fa-play text-[11px]"></i>
-                                Commencer gratuitement
+                                <i :class="user ? 'fas fa-user-plus text-[11px]' : 'fas fa-play text-[11px]'"></i>
+
+                                {{ user ? "S'enrôler maintenant" : "Commencer gratuitement" }}
                             </button>
                         </div>
 
@@ -356,11 +362,14 @@
 </template>
 
 <script setup lang="ts">
+import { router, useForm, usePage } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import FilterSidebar from '@/Components/FilterSidebar.vue'
+import FlashMessage from '@/Components/FlashMessage.vue'
 import ProductCard from '@/Components/ProductCard.vue'
 import Footer from '@/Components/Public/Footer.vue'
 import Navigation from '@/Components/Public/Navigation.vue'
+import { showLogin, studentCoursesMakeEnrollement } from '@/routes'
 import type { Product } from '@/types/Product'
 
 interface Props {
@@ -461,6 +470,40 @@ const resetFilters = (): void => {
     }
     filteredProducts.value = allProducts
 }
+
+interface Form {
+    course_id: number | null,
+    video_id: number | null,
+    audio_id: number | null,
+}
+const handleEnrolledNow = (courseId: number, courseType: 'Audio' | 'Video' | 'PDF') => {
+    const form = useForm<Form>({
+        course_id: null,
+        video_id: null,
+        audio_id: null,
+    });
+
+    if (courseType == 'Audio') {
+        form.audio_id = courseId
+    } else if (courseType == 'PDF') {
+        form.course_id = courseId
+    } else if (courseType == 'Video') {
+        form.video_id = courseId
+    }
+
+    form.post(studentCoursesMakeEnrollement.url(), {
+        onSuccess: () => {
+            form.reset();
+            selectedProduct.value = null
+        },
+        onError: (error) => {
+            console.log("An Error an Occured : ", error)
+        }
+    })
+}
+
+const page = usePage();
+const user = page.props.auth.user;
 </script>
 
 <style scoped>
