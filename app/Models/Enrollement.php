@@ -29,12 +29,12 @@ class Enrollement extends Model
         return $this->belongsTo(Course::class, 'course_id');
     }
 
-    public function videos(): BelongsTo
+    public function video(): BelongsTo
     {
         return $this->belongsTo(Video::class, 'video_id');
     }
 
-    public function audios(): BelongsTo{
+    public function audio(): BelongsTo{
         return $this->belongsTo(Audio::class, 'audio_id');
     }
 }
