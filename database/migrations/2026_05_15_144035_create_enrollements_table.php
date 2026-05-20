@@ -22,6 +22,8 @@ return new class extends Migration
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
             $table->foreign('video_id')->references('id')->on('videos')->onDelete('cascade');
             $table->foreign('audio_id')->references('id')->on('audios')->onDelete('cascade');
+
+            $table->integer('progress')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

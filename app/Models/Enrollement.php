@@ -17,6 +17,7 @@ class Enrollement extends Model
         'course_id',
         'video_id',
         'audio_id',
+        'progress'
     ];
 
     public function student(): BelongsTo

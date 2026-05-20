@@ -1,0 +1,15 @@
+export const BOOKTHEME = {
+    format: 'pdf',
+    accent: '#F4B400',
+    accentText: '#1a1a1a',
+    defaultCardBg: '#fef9e7',
+    pageLabel: 'Bibliothèque PDF',
+    pageTitle: 'Mes livres & PDF',
+    pageSubtitle: 'ressources PDF disponibles',
+    itemName: 'livre',
+    icon: 'fas fa-book-open',
+    defaultIcon: 'fas fa-file-pdf',
+    ctaIcon: 'fas fa-book-reader',
+    ctaStart: 'Commencer la lecture',
+    ctaContinue: 'Continuer la lecture',
+} as const

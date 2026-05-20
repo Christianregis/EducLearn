@@ -11,7 +11,7 @@
                      ZONE PRINCIPALE
                 ══════════════════════════════════════ -->
                 <div class="flex-1 flex flex-col overflow-hidden min-w-0 transition-all duration-300"
-                    :class="selectedEnrollment ? 'lg:mr-[380px]' : ''">
+                    >
                     <div class="flex-1 overflow-y-auto px-7 pt-7 pb-10 scrollbar-thin">
 
                         <!-- ── HEADER ── -->
@@ -20,7 +20,6 @@
                                 <span
                                     class="inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.12em] uppercase mb-2"
                                     :style="`color:${THEME.accent}`">
-                                    <i :class="THEME.icon" class="text-[10px]"></i>
                                     {{ THEME.pageLabel }}
                                 </span>
                                 <h1 class="text-[22px] font-bold text-gray-900">{{ THEME.pageTitle }}</h1>
@@ -116,7 +115,7 @@
                                     </div>
 
                                     <!-- Badge complété -->
-                                    <div v-if="enrollment.course.progress === 100" class="absolute top-2.5 left-2.5">
+                                    <div v-if="enrollment.progress === 100" class="absolute top-2.5 left-2.5">
                                         <span
                                             class="text-[9px] font-bold bg-emerald-500 text-white px-2 py-1 rounded-lg flex items-center gap-1">
                                             <i class="fas fa-check text-[8px]"></i> Terminé
@@ -146,12 +145,12 @@
                                         <div class="flex justify-between items-center mb-1">
                                             <span class="text-[10px] text-gray-400">Progression</span>
                                             <span class="text-[11px] font-bold text-gray-800">
-                                                {{ enrollment.course.progress }}%
+                                                {{ enrollment.progress }}%
                                             </span>
                                         </div>
                                         <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                                             <div class="h-full rounded-full transition-all duration-700"
-                                                :style="`width:${enrollment.course.progress}%; background:${progressColor(enrollment.course.progress)}`">
+                                                :style="`width:${enrollment.progress}%; background:${progressColor(enrollment.progress)}`">
                                             </div>
                                         </div>
                                     </div>
@@ -175,195 +174,8 @@
                 <!-- ══════════════════════════════════════
                      PANNEAU DÉTAIL (slide droite)
                 ══════════════════════════════════════ -->
-                <Transition name="slide-panel">
-                    <aside v-if="selectedEnrollment"
-                        class="fixed right-0 top-0 h-full w-[380px] bg-white border-l border-gray-100 shadow-2xl flex flex-col z-30 overflow-hidden">
-                        <!-- Header panneau -->
-                        <div class="flex items-center justify-between px-5 pt-5 pb-4 border-b border-gray-50">
-                            <span class="text-[11px] font-semibold tracking-widest uppercase text-gray-400">
-                                Détail du {{ THEME.itemName }}
-                            </span>
-                            <button @click="selectedEnrollment = null"
-                                class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors text-gray-500 text-xs">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-
-                        <!-- Body scrollable -->
-                        <div class="flex-1 overflow-y-auto scrollbar-thin">
-
-                            <!-- Couverture décorative -->
-                            <div class="h-52 relative flex items-center justify-center overflow-hidden"
-                                :style="`background:${selectedEnrollment.course.color || THEME.defaultCardBg}`">
-                                <div class="absolute inset-0 opacity-10"
-                                    :style="`background: repeating-linear-gradient(45deg, ${THEME.accent} 0px, ${THEME.accent} 1px, transparent 0, transparent 50%) / 16px 16px`">
-                                </div>
-
-                                <!-- Image de fond si disponible -->
-                                <img v-if="selectedEnrollment.course.image" :src="selectedEnrollment.course.image"
-                                    :alt="selectedEnrollment.course.title"
-                                    class="absolute inset-0 w-full h-full object-cover opacity-15" />
-
-                                <!-- Cercles déco -->
-                                <div class="absolute -bottom-8 -right-8 w-32 h-32 rounded-full opacity-20"
-                                    :style="`background:${THEME.accent}`"></div>
-                                <div class="absolute -top-4 -left-4 w-20 h-20 rounded-full opacity-10"
-                                    :style="`background:${THEME.accent}`"></div>
-
-                                <!-- Icône centrale -->
-                                <div class="relative z-10 flex flex-col items-center gap-3">
-                                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl shadow-lg"
-                                        :style="`background:${THEME.accent}; color:${THEME.accentText}`">
-                                        <i :class="selectedEnrollment.course.icon || THEME.defaultIcon"></i>
-                                    </div>
-                                </div>
-
-                                <!-- Badge progression -->
-                                <div class="absolute bottom-3 right-3">
-                                    <div
-                                        class="bg-white/90 backdrop-blur-sm rounded-xl px-3 py-1.5 text-xs font-bold text-gray-800 shadow-sm">
-                                        {{ selectedEnrollment.course.progress }}% complété
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Infos principales -->
-                            <div class="px-5 py-5">
-
-                                <!-- Badges statut -->
-                                <div class="flex items-center gap-2 mb-3 flex-wrap">
-                                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide"
-                                        :class="levelClass(selectedEnrollment.course.level)">
-                                        {{ selectedEnrollment.course.level }}
-                                    </span>
-                                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide"
-                                        :style="`background:${THEME.accent}20; color:${THEME.accent}`">
-                                        {{ selectedEnrollment.course.format }}
-                                    </span>
-                                    <span v-if="selectedEnrollment.course.status"
-                                        class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 uppercase tracking-wide">
-                                        {{ selectedEnrollment.course.status }}
-                                    </span>
-                                </div>
-
-                                <!-- Titre -->
-                                <h2 class="text-[17px] font-bold text-gray-900 leading-snug mb-2">
-                                    {{ selectedEnrollment.course.title }}
-                                </h2>
-
-                                <!-- Description -->
-                                <p v-if="selectedEnrollment.course.description"
-                                    class="text-[12.5px] text-gray-500 leading-relaxed mb-5">
-                                    {{ selectedEnrollment.course.description }}
-                                </p>
-
-                                <!-- Méta-données : grille 2 colonnes -->
-                                <div class="grid grid-cols-2 gap-3 mb-5">
-                                    <div class="bg-gray-50 rounded-xl p-3">
-                                        <p class="text-[10px] text-gray-400 mb-1 uppercase tracking-wide">Durée</p>
-                                        <p class="text-[13px] font-bold text-gray-800 flex items-center gap-1.5">
-                                            <i class="fas fa-clock text-[11px]" :style="`color:${THEME.accent}`"></i>
-                                            {{ selectedEnrollment.course.duration || '—' }}
-                                        </p>
-                                    </div>
-                                    <div class="bg-gray-50 rounded-xl p-3">
-                                        <p class="text-[10px] text-gray-400 mb-1 uppercase tracking-wide">Catégorie</p>
-                                        <p class="text-[13px] font-bold text-gray-800 flex items-center gap-1.5">
-                                            <i class="fas fa-tag text-[11px]" :style="`color:${THEME.accent}`"></i>
-                                            {{ selectedEnrollment.course.category || '—' }}
-                                        </p>
-                                    </div>
-                                    <div class="bg-gray-50 rounded-xl p-3">
-                                        <p class="text-[10px] text-gray-400 mb-1 uppercase tracking-wide">Étudiants</p>
-                                        <p class="text-[13px] font-bold text-gray-800 flex items-center gap-1.5">
-                                            <i class="fas fa-users text-[11px]" :style="`color:${THEME.accent}`"></i>
-                                            {{ selectedEnrollment.course.students ?? 0 }}
-                                        </p>
-                                    </div>
-                                    <div class="bg-gray-50 rounded-xl p-3">
-                                        <p class="text-[10px] text-gray-400 mb-1 uppercase tracking-wide">Prix</p>
-                                        <p class="text-[13px] font-bold text-gray-800 flex items-center gap-1.5">
-                                            <i class="fas fa-coins text-[11px]" :style="`color:${THEME.accent}`"></i>
-                                            {{ selectedEnrollment.course.price > 0
-                                                ? selectedEnrollment.course.price + ' FCFA'
-                                                : 'Gratuit' }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <!-- Progression détaillée -->
-                                <div class="mb-5">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <span class="text-xs font-semibold text-gray-600">Votre progression</span>
-                                        <span class="text-sm font-bold"
-                                            :style="`color:${progressColor(selectedEnrollment.course.progress)}`">
-                                            {{ selectedEnrollment.course.progress }}%
-                                        </span>
-                                    </div>
-                                    <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                        <div class="h-full rounded-full transition-all duration-700"
-                                            :style="`width:${selectedEnrollment.course.progress}%; background:${progressColor(selectedEnrollment.course.progress)}`">
-                                        </div>
-                                    </div>
-                                    <p class="text-[10px] text-gray-400 mt-1.5">
-                                        Inscrit le {{ formatDate(selectedEnrollment.created_at) }}
-                                    </p>
-                                </div>
-
-                                <div class="border-t border-gray-100 mb-5"></div>
-
-                                <!-- Aperçu image -->
-                                <div v-if="selectedEnrollment.course.image" class="mb-5">
-                                    <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">
-                                        Aperçu</p>
-                                    <img :src="selectedEnrollment.course.image" :alt="selectedEnrollment.course.title"
-                                        class="w-full h-32 object-cover rounded-xl border border-gray-100" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ── CTA FOOTER ── -->
-                        <div class="px-5 py-4 border-t border-gray-100 bg-white">
-
-                            <!-- Cours terminé -->
-                            <div v-if="selectedEnrollment.course.progress === 100" class="flex items-center gap-3">
-                                <div class="flex-1 flex items-center gap-2 bg-emerald-50 rounded-xl px-4 py-3">
-                                    <i class="fas fa-check-circle text-emerald-500"></i>
-                                    <span class="text-sm font-semibold text-emerald-700">Cours terminé</span>
-                                </div>
-                                <a v-if="selectedEnrollment.course.file" :href="selectedEnrollment.course.file"
-                                    target="_blank" rel="noopener noreferrer"
-                                    class="w-11 h-11 rounded-xl flex items-center justify-center border border-gray-200 hover:bg-gray-50 transition-colors text-gray-500 text-sm"
-                                    title="Télécharger">
-                                    <i class="fas fa-download"></i>
-                                </a>
-                            </div>
-
-                            <!-- Cours en cours -->
-                            <div v-else class="flex items-center gap-3">
-                                <a v-if="selectedEnrollment.course.file" :href="selectedEnrollment.course.file"
-                                    target="_blank" rel="noopener noreferrer"
-                                    class="flex-1 inline-flex items-center justify-center gap-2.5 font-bold text-[13px] py-3 rounded-xl border-none cursor-pointer transition-all hover:opacity-90 hover:shadow-md no-underline"
-                                    :style="`background:${THEME.accent}; color:${THEME.accentText}`">
-                                    <i :class="THEME.ctaIcon"></i>
-                                    {{ selectedEnrollment.course.progress > 0 ? THEME.ctaContinue : THEME.ctaStart }}
-                                </a>
-                                <button v-else disabled
-                                    class="flex-1 inline-flex items-center justify-center gap-2.5 font-bold text-[13px] py-3 rounded-xl border-none cursor-not-allowed opacity-50"
-                                    :style="`background:${THEME.accent}; color:${THEME.accentText}`">
-                                    <i class="fas fa-ban"></i> Fichier indisponible
-                                </button>
-                            </div>
-                        </div>
-                    </aside>
-                </Transition>
-
-                <!-- Overlay mobile -->
-                <Transition name="fade">
-                    <div v-if="selectedEnrollment" class="lg:hidden fixed inset-0 bg-black/30 z-20 backdrop-blur-sm"
-                        @click="selectedEnrollment = null"></div>
-                </Transition>
-
+                <CourseDetail v-if="selectedEnrollment" :enrollement="selectedEnrollment" :theme="THEME"
+                    @close-course-detail="closeEnrollementDetails" />
             </main>
         </div>
     </div>
@@ -372,60 +184,24 @@
 <script lang="ts" setup>
 import { usePage } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
+import CourseDetail from '@/Components/Admin/CourseDetail.vue'
 import Navbar from '@/Components/Admin/Layout/Navbar.vue'
 import Sidebar from '@/Components/Admin/Layout/Sidebar.vue'
+import { BOOKTHEME } from '@/types/bookTheme'
+import type { EnrollmentItem } from '@/types/enrollement'
+import { levelClass } from '@/utils/levelClass'
+import { LEVEL_ORDER } from '@/utils/levelOrder'
+import { progressColor } from '@/utils/progressColor'
 
 // ──────────────────────────────────────────────────────────────
 // THÈME — Modifiez ici pour adapter à Vidéo / Audio / PDF
 // ──────────────────────────────────────────────────────────────
-const THEME = {
-    format: 'pdf',
-    accent: '#F4B400',
-    accentText: '#1a1a1a',
-    defaultCardBg: '#fef9e7',
-    pageLabel: 'Bibliothèque PDF',
-    pageTitle: 'Mes livres & PDF',
-    pageSubtitle: 'ressources PDF disponibles',
-    itemName: 'livre',
-    icon: 'fas fa-book-open',
-    defaultIcon: 'fas fa-file-pdf',
-    ctaIcon: 'fas fa-book-reader',
-    ctaStart: 'Commencer la lecture',
-    ctaContinue: 'Continuer la lecture',
-} as const
+const THEME = BOOKTHEME
 
 // ──────────────────────────────────────────────────────────────
 // TYPES
 // ──────────────────────────────────────────────────────────────
-interface Course {
-    id: number
-    title: string
-    description: string
-    category: string
-    teacher_id: number
-    duration: string
-    price: number
-    image: string
-    format: string
-    progress: number
-    icon: string
-    color: string
-    level: string
-    file: string
-    students: number
-    status: string
-}
 
-interface EnrollmentItem {
-    id: number
-    student_id: number
-    course_id: number
-    video_id: number | null
-    audio_id: number | null
-    course: Course
-    created_at: string
-    updated_at: string
-}
 
 interface PageProps {
     books: {
@@ -474,21 +250,21 @@ const filterTabs = computed(() => [
         id: 'in-progress' as FilterId,
         label: 'En cours',
         count: enrollments.value.filter(
-            (e) => e.course.progress > 0 && e.course.progress < 100
+            (e) => e.progress > 0 && e.progress < 100
         ).length,
     },
     {
         id: 'completed' as FilterId,
         label: 'Terminés',
         count: enrollments.value.filter(
-            (e) => e.course.progress === 100
+            (e) => e.progress === 100
         ).length,
     },
     {
         id: 'new' as FilterId,
         label: 'Non commencés',
         count: enrollments.value.filter(
-            (e) => e.course.progress === 0
+            (e) => e.progress === 0
         ).length,
     },
 ])
@@ -496,22 +272,16 @@ const filterTabs = computed(() => [
 // ──────────────────────────────────────────────────────────────
 // PIPELINE : FILTRE + RECHERCHE + TRI
 // ──────────────────────────────────────────────────────────────
-const LEVEL_ORDER: Record<string, number> = {
-    'Débutant': 0,
-    'Intermédiaire': 1,
-    'Avancé': 2,
-}
-
 const filteredAndSorted = computed<EnrollmentItem[]>(() => {
     let list = [...enrollments.value]
 
     // ── Filtre onglet
     if (activeFilter.value === 'in-progress') {
-        list = list.filter((e) => e.course.progress > 0 && e.course.progress < 100)
+        list = list.filter((e) => e.progress > 0 && e.course.progress < 100)
     } else if (activeFilter.value === 'completed') {
-        list = list.filter((e) => e.course.progress === 100)
+        list = list.filter((e) => e.progress === 100)
     } else if (activeFilter.value === 'new') {
-        list = list.filter((e) => e.course.progress === 0)
+        list = list.filter((e) => e.progress === 0)
     }
 
     // ── Recherche textuelle
@@ -532,9 +302,9 @@ const filteredAndSorted = computed<EnrollmentItem[]>(() => {
             case 'title':
                 return a.course.title.localeCompare(b.course.title, 'fr')
             case 'progress_asc':
-                return a.course.progress - b.course.progress
+                return a.progress - b.progress
             case 'progress_desc':
-                return b.course.progress - a.course.progress
+                return b.progress - a.progress
             case 'level':
                 return (LEVEL_ORDER[a.course.level] ?? 9) - (LEVEL_ORDER[b.course.level] ?? 9)
             case 'recent':
@@ -550,41 +320,13 @@ const filteredAndSorted = computed<EnrollmentItem[]>(() => {
 // ACTIONS
 // ──────────────────────────────────────────────────────────────
 function selectEnrollment(enrollment: EnrollmentItem): void {
-    selectedEnrollment.value =
-        selectedEnrollment.value?.id === enrollment.id ? null : enrollment
+    selectedEnrollment.value = selectedEnrollment.value?.id === enrollment.id ? null : enrollment
+
 }
-
-// ──────────────────────────────────────────────────────────────
-// HELPERS
-// ──────────────────────────────────────────────────────────────
-function progressColor(progress: number): string {
-    if (progress === 100) {
-        return '#10B981'
+function closeEnrollementDetails(isClose: boolean) {
+    if (isClose) {
+        selectedEnrollment.value = null;
     }
-
-    if (progress >= 50) {
-        return '#F4B400'
-    }
-
-    return '#F97316'
-}
-
-function levelClass(level: string): string {
-    const map: Record<string, string> = {
-        'Débutant': 'bg-emerald-50 text-emerald-600',
-        'Intermédiaire': 'bg-blue-50 text-blue-600',
-        'Avancé': 'bg-purple-50 text-purple-600',
-    }
-
-    return map[level] ?? 'bg-gray-100 text-gray-500'
-}
-
-function formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-    })
 }
 </script>
 

@@ -25,6 +25,7 @@ class EnrollementResource extends JsonResource
             'course' => CourseResource::make($this->whenLoaded('course')),
             'created_at' => $this->created_at->format('Y-m-d H:m'),
             'updated_at' => $this->updated_at->format('Y-m-d H:m'),
+            'progress' => $this->progress,
         ];
     }
 }
