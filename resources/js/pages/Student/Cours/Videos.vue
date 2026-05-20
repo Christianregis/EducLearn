@@ -1,310 +1,479 @@
 <template>
-    <!-- ── ROOT LAYOUT ── -->
-    <div class="flex h-screen overflow-hidden font-sans bg-dark-50">
-        <!-- Sidebar -->
+    <div class="flex h-screen overflow-hidden font-sans" style="background: #f4f5f7">
         <Sidebar :user="user" />
 
-        <div class="flex-1 flex flex-col overflow-hidden min-w-0">
-            <!-- Navbar -->
+        <div class="flex min-w-0 flex-1 flex-col overflow-hidden">
             <Navbar :user="user" />
 
-            <!-- PAGE CONTENT -->
-            <main class="flex-1 overflow-y-auto px-7 pt-7 pb-10 scrollbar-thin scrollbar-thumb-dark-200">
-                <!-- ── SECTION HEADING ── -->
-                <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-                    <div>
-                        <div class="flex items-center gap-3 mb-2">
-                            <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
-                                <i class="fas fa-video text-xl text-amber-500"></i>
+            <main class="relative flex flex-1 overflow-hidden">
+                <!-- ══════════════════════════════════════
+                     ZONE PRINCIPALE
+                ══════════════════════════════════════ -->
+                <div class="flex min-w-0 flex-1 flex-col overflow-hidden transition-all duration-300">
+                    <div class="flex-1 scrollbar-thin overflow-y-auto px-8 pt-8 pb-12">
+                        <!-- ── HEADER ── -->
+                        <div class="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+                            <div>
+                                <!-- Label pill -->
+                                <span
+                                    class="mb-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold tracking-[0.15em] uppercase"
+                                    :style="`color:${THEME.accent}; background:${THEME.accent}14`">
+                                    <span class="h-1.5 w-1.5 animate-pulse rounded-full"
+                                        :style="`background:${THEME.accent}`"></span>
+                                    {{ THEME.pageLabel }}
+                                </span>
+
+                                <h1 class="text-[26px] leading-tight font-extrabold tracking-tight text-gray-900">
+                                    {{ THEME.pageTitle }}
+                                </h1>
+
+                                <p class="mt-1.5 flex items-center gap-1.5 text-[13px] text-gray-400">
+                                    <span class="text-[14px] font-bold text-gray-700">{{ filteredAndSorted.length
+                                        }}</span>
+                                    {{ THEME.pageSubtitle }}
+                                    <span v-if="activeFilter !== 'all'"
+                                        class="ml-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold"
+                                        :style="`background:${THEME.accent}15; color:${THEME.accent}`">
+                                        <i class="fas fa-filter text-[8px]"></i>
+                                        filtre actif
+                                    </span>
+                                </p>
                             </div>
-                            <h1 class="text-[22px] font-bold text-dark">Mes cours vidéo</h1>
-                        </div>
-                        <p class="text-[13px] text-dark-500 mt-0.5">
-                            {{ videos.length }} cours · {{ completedCount }} terminés · {{ inProgressCount }} en cours
-                        </p>
-                    </div>
-                    <button
-                        class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-dark font-bold text-[13px] px-4.5 py-2.5 rounded-[9px] border-none cursor-pointer transition-colors self-start">
-                        <i class="fas fa-plus"></i> Nouveau cours
-                    </button>
-                </div>
 
-                <!-- ── FILTERS & SORT BAR ── -->
-                <div class="bg-white rounded-2xl p-4 mb-6 border border-amber-200">
-                    <div class="flex flex-col lg:flex-row gap-4">
-                        <!-- Search -->
-                        <div class="relative flex-1">
-                            <input v-model="searchQuery" type="text" placeholder="Rechercher un cours vidéo..."
-                                class="w-full pl-10 pr-4 py-2.5 bg-dark-50 border border-dark-200 rounded-[9px] text-sm text-dark placeholder-dark-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all" />
-                            <i
-                                class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-dark-400 text-sm"></i>
+                            <!-- Search + Sort -->
+                            <div class="flex items-center gap-2.5">
+                                <!-- Search -->
+                                <div class="relative">
+                                    <input v-model="search" type="text"
+                                        :placeholder="`Rechercher un ${THEME.itemName}...`"
+                                        class="w-60 rounded-xl bg-white py-2.5 pr-4 pl-10 text-[13px] text-gray-800 placeholder-gray-300 transition-all duration-200 focus:outline-none"
+                                        style="
+                                            border: 1.5px solid #e8e8ec;
+                                            box-shadow: 0 1px 3px
+                                                rgba(0, 0, 0, 0.04);
+                                        " :style="`--tw-ring-color:${THEME.accent}40`" @focus="
+                                            (e) =>
+                                            ((
+                                                e.target as HTMLInputElement
+                                            ).style.borderColor =
+                                                THEME.accent)
+                                        " @blur="
+                                            (e) =>
+                                            ((
+                                                e.target as HTMLInputElement
+                                            ).style.borderColor = '#E8E8EC')
+                                        " />
+                                    <i
+                                        class="fas fa-search absolute top-1/2 left-3.5 -translate-y-1/2 text-[11px] text-gray-300"></i>
+                                </div>
+
+                                <!-- Sort -->
+                                <div class="relative">
+                                    <select v-model="sortKey"
+                                        class="cursor-pointer appearance-none rounded-xl bg-white py-2.5 pr-9 pl-3.5 text-[13px] text-gray-700 transition-all duration-200 focus:outline-none"
+                                        style="
+                                            border: 1.5px solid #e8e8ec;
+                                            box-shadow: 0 1px 3px
+                                                rgba(0, 0, 0, 0.04);
+                                        ">
+                                        <option value="recent">
+                                            Plus récent
+                                        </option>
+                                        <option value="title">Titre A→Z</option>
+                                        <option value="progress_asc">
+                                            Progression ↑
+                                        </option>
+                                        <option value="progress_desc">
+                                            Progression ↓
+                                        </option>
+                                        <option value="level">Niveau</option>
+                                    </select>
+                                    <i
+                                        class="fas fa-chevron-down pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[9px] text-gray-300"></i>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Filter by Status -->
-                        <div class="flex items-center gap-2">
-                            <button v-for="filter in statusFilters" :key="filter.id"
-                                @click="activeStatusFilter = filter.id"
-                                class="px-4 py-2.5 text-sm font-medium rounded-[9px] transition-all border" :class="activeStatusFilter === filter.id
-                                    ? 'bg-amber-500 text-dark border-amber-500'
-                                    : 'bg-white text-dark-500 border-dark-200 hover:border-amber-300 hover:bg-amber-50'">
-                                {{ filter.label }}
-                                <span class="ml-1.5 px-1.5 py-0.5 text-[10px] font-semibold rounded-full"
-                                    :class="activeStatusFilter === filter.id ? 'bg-dark text-white' : 'bg-dark-100 text-dark-500'">
-                                    {{ filter.count }}
+                        <!-- ── FILTER TABS ── -->
+                        <div class="mb-7 flex flex-wrap items-center gap-1.5">
+                            <button v-for="tab in filterTabs" :key="tab.id" @click="activeFilter = tab.id"
+                                class="inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-[12px] font-bold transition-all duration-200"
+                                :style="activeFilter === tab.id
+                                    ? `background:${THEME.accent}; color:${THEME.accentText}; border-color:${THEME.accent}; box-shadow:0 4px 12px ${THEME.accent}35`
+                                    : 'background:#fff; color:#9CA3AF; border-color:#EBEBEF; box-shadow:0 1px 2px rgba(0,0,0,0.03)'
+                                    ">
+                                {{ tab.label }}
+                                <span
+                                    class="flex h-5 min-w-5 items-center justify-center rounded-lg px-1.5 text-[10px] font-extrabold"
+                                    :style="activeFilter === tab.id
+                                        ? 'background:rgba(0,0,0,0.15); color:inherit'
+                                        : 'background:#F3F4F6; color:#6B7280'
+                                        ">
+                                    {{ tab.count }}
                                 </span>
                             </button>
                         </div>
 
-                        <!-- Sort -->
-                        <div class="flex items-center gap-2">
-                            <label class="text-sm text-dark-500 font-medium whitespace-nowrap">Trier par :</label>
-                            <select v-model="sortBy"
-                                class="px-4 py-2.5 bg-white border border-dark-200 rounded-[9px] text-sm text-dark focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 cursor-pointer">
-                                <option value="date-desc">Plus récents</option>
-                                <option value="date-asc">Plus anciens</option>
-                                <option value="progress-desc">Progression (décroissant)</option>
-                                <option value="progress-asc">Progression (croissant)</option>
-                                <option value="title-asc">Titre (A-Z)</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+                        <!-- ── GRILLE DE COURS ── -->
+                        <div v-if="filteredAndSorted.length > 0"
+                            class="grid grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-4">
+                            <div v-for="(enrollment, idx) in filteredAndSorted" :key="enrollment.id"
+                                @click="selectEnrollment(enrollment)"
+                                class="group card-appear relative cursor-pointer overflow-hidden rounded-2xl bg-white transition-all duration-300 hover:-translate-y-1"
+                                :style="`
+                                    animation-delay:${idx * 40}ms;
+                                    ${selectedEnrollment?.id === enrollment.id
+                                        ? `box-shadow: 0 0 0 2.5px ${THEME.accent}, 0 12px 32px rgba(0,0,0,0.10)`
+                                        : 'border:1.5px solid #EBEBEF; box-shadow:0 1px 4px rgba(0,0,0,0.04)'
+                                    }
+                                `">
+                                <!-- Thumbnail -->
+                                <div class="relative flex h-38 items-center justify-center overflow-hidden"
+                                    style="height: 152px" :style="`
+                                        background: linear-gradient(
+                                            135deg,
+                                            ${enrollment.course.color || THEME.defaultCardBg}15,
+                                            #fffff
+                                        )
+                                    `">
+                                    <!-- Image du cours -->
+                                    <img v-if="enrollment.course.image" :src="enrollment.course.image"
+                                        :alt="enrollment.course.title"
+                                        class="absolute inset-0 h-full w-full scale-105 object-cover opacity-[0.08] transition-all duration-500 group-hover:opacity-[0.12]" />
 
-                <!-- ── VIDEOS GRID ── -->
-                <div class="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-5">
-                    <div v-for="video in filteredVideos" :key="video.id"
-                        class="bg-white rounded-2xl overflow-hidden border border-amber-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-amber-300 group">
+                                    <!-- Orbe lumineux -->
+                                    <div class="absolute -right-6 -bottom-6 h-24 w-24 rounded-full opacity-20 blur-3xl"
+                                        :style="`background:${THEME.accent}`"></div>
 
-                        <!-- Video Thumbnail -->
-                        <div
-                            class="relative h-40 bg-linear-to-br from-amber-100 via-yellow-50 to-orange-100 overflow-hidden">
-                            <!-- Background Pattern -->
-                            <div class="absolute inset-0 opacity-10">
-                                <div class="absolute inset-0"
-                                    :style="`background-image: radial-gradient(circle, #F59E0B 1px, transparent 1px); background-size: 20px 20px;`">
-                                </div>
-                            </div>
+                                    <!-- Icône -->
+                                    <div class="relative z-10 flex flex-col items-center gap-2">
+                                        <div class="flex h-14 w-14 items-center justify-center rounded-2xl text-[22px] shadow-lg transition-transform duration-300 group-hover:scale-110"
+                                            :style="`
+                                                background:${THEME.accent}15;
+                                                color:${THEME.accent};
+                                                backdrop-filter:blur(6px)
+                                            `">
+                                            <i :class="enrollment.course.icon ||
+                                                THEME.defaultIcon
+                                                "></i>
+                                        </div>
+                                    </div>
 
-                            <!-- Video Icon Center -->
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div
-                                    class="w-16 h-16 rounded-2xl bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                                    <i class="fas fa-play-circle text-[40px] text-amber-500"></i>
-                                </div>
-                            </div>
+                                    <!-- Badge format -->
+                                    <div class="absolute top-2.5 right-2.5">
+                                        <span
+                                            class="rounded-lg px-2.5 py-1 text-[9px] font-extrabold tracking-widest uppercase"
+                                            :style="`background:${THEME.accent}; color:${THEME.accentText}; box-shadow:0 2px 8px ${THEME.accent}50`">
+                                            {{ enrollment.course.format }}
+                                        </span>
+                                    </div>
 
-                            <!-- Duration Badge -->
-                            <div class="absolute bottom-2 right-2 px-2 py-1 bg-dark/80 backdrop-blur-sm rounded-lg">
-                                <span class="text-[10px] font-semibold text-amber-400">{{ video.duration }}</span>
-                            </div>
-
-                            <!-- Progress Overlay -->
-                            <div class="absolute bottom-0 left-0 right-0 h-1 bg-dark-200">
-                                <div class="h-full bg-emerald-500 transition-all duration-500"
-                                    :style="`width:${video.progress}%`"></div>
-                            </div>
-
-                            <!-- Level Badge -->
-                            <div class="absolute top-2 right-2">
-                                <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wide"
-                                    :class="{
-                                        'bg-emerald-500 text-white': video.level.toLowerCase() === 'débutant',
-                                        'bg-blue-500 text-white': video.level.toLowerCase() === 'intermédiaire',
-                                        'bg-orange-500 text-white': video.level.toLowerCase() === 'avancé',
-                                    }">
-                                    {{ video.level }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Body -->
-                        <div class="px-5 py-4">
-                            <!-- Header -->
-                            <div class="flex items-center justify-between mb-3">
-                                <span
-                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-amber-50 text-amber-600">
-                                    <i class="fas fa-video text-[9px]"></i>
-                                    Vidéo
-                                </span>
-                                <span class="text-[10px] font-medium text-dark-400">
-                                    #{{ video.id.toString().padStart(4, '0') }}
-                                </span>
-                            </div>
-
-                            <!-- Title -->
-                            <h4
-                                class="text-[15px] font-bold text-dark leading-[1.4] mb-2 group-hover:text-amber-600 transition-colors line-clamp-2">
-                                {{ video.title }}
-                            </h4>
-
-                            <!-- Instructor -->
-                            <p class="text-[12px] text-dark-400 mb-4 flex items-center gap-1.5">
-                                <i class="fas fa-user-circle text-[10px] text-amber-500"></i>
-                                {{ video.instructor }}
-                            </p>
-
-                            <!-- Progress Info -->
-                            <div class="mb-4">
-                                <div class="flex items-center justify-between mb-1.5">
-                                    <span
-                                        class="text-[10px] font-medium text-dark-500 uppercase tracking-wide">Progression</span>
-                                    <span class="text-sm font-bold text-dark">{{ video.progress }}%</span>
-                                </div>
-                                <div class="h-2 bg-dark-100 rounded-full overflow-hidden">
-                                    <div class="h-full rounded-full transition-[width] duration-500 ease-out"
-                                        :style="`width:${video.progress}%; background:${video.progress === 100 ? '#10B981' : '#F59E0B'}`">
+                                    <!-- Badge complété -->
+                                    <div v-if="enrollment.progress === 100" class="absolute top-2.5 left-2.5">
+                                        <span
+                                            class="flex items-center gap-1 rounded-lg bg-emerald-500 px-2.5 py-1 text-[9px] font-bold text-white shadow-md">
+                                            <i class="fas fa-check text-[8px]"></i>
+                                            Terminé
+                                        </span>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Actions -->
-                            <div class="flex items-center gap-2">
-                                <button v-if="video.progress === 100"
-                                    class="flex-1 inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[11px] px-4 py-2.5 rounded-xl transition-all duration-200">
-                                    <i class="fas fa-check-circle text-[10px]"></i>
-                                    Terminé
-                                </button>
-                                <button v-else
-                                    class="flex-1 inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-dark font-bold text-[11px] px-4 py-2.5 rounded-xl transition-all duration-200">
-                                    <i class="fas fa-play text-[10px]"></i>
-                                    {{ video.progress > 0 ? 'Continuer' : 'Commencer' }}
-                                </button>
-                                <button
-                                    class="w-10 h-10 rounded-xl border border-amber-200 text-dark-400 hover:text-amber-600 hover:border-amber-300 hover:bg-amber-50 flex items-center justify-center transition-all duration-200">
-                                    <i class="fas fa-bookmark text-[12px]"></i>
-                                </button>
+                                <!-- Corps carte -->
+                                <div class="p-4 pt-3.5">
+                                    <span class="mb-2.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold"
+                                        :class="levelClass(enrollment.course.level)
+                                            ">
+                                        {{ enrollment.course.level }}
+                                    </span>
+
+                                    <h4
+                                        class="mb-1.5 line-clamp-2 text-[13px] leading-snug font-bold text-gray-900 transition-colors group-hover:text-gray-700">
+                                        {{ enrollment.course.title }}
+                                    </h4>
+
+                                    <p class="mb-3.5 flex items-center gap-1.5 text-[11px] text-gray-400">
+                                        <i class="fas fa-clock text-[9px] opacity-60"></i>
+                                        {{ enrollment.course.duration || '—' }}
+                                    </p>
+
+                                    <!-- Barre de progression -->
+                                    <div>
+                                        <div class="mb-1.5 flex items-center justify-between">
+                                            <span class="text-[10px] font-medium text-gray-400">Progression</span>
+                                            <span class="text-[11px] font-extrabold"
+                                                :style="`color:${progressColor(enrollment.progress)}`">
+                                                {{ enrollment.progress }}%
+                                            </span>
+                                        </div>
+                                        <div class="h-1.5 overflow-hidden rounded-full" style="background: #f0f0f4">
+                                            <div class="h-full rounded-full transition-all duration-700"
+                                                :style="`width:${enrollment.progress}%; background:${progressColor(enrollment.progress)}; box-shadow:0 0 6px ${progressColor(enrollment.progress)}60`">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sélection indicator bottom -->
+                                <div v-if="
+                                    selectedEnrollment?.id === enrollment.id
+                                " class="absolute right-0 bottom-0 left-0 h-0.5 rounded-b-2xl"
+                                    :style="`background:${THEME.accent}`"></div>
                             </div>
+                        </div>
+
+                        <!-- ── EMPTY STATE ── -->
+                        <div v-else class="flex flex-col items-center justify-center py-28 text-center">
+                            <div class="mb-5 flex h-20 w-20 items-center justify-center rounded-3xl shadow-sm"
+                                :style="`background:${THEME.accent}12`">
+                                <i :class="THEME.icon" class="text-[28px]" :style="`color:${THEME.accent}`"></i>
+                            </div>
+                            <h3 class="mb-1.5 text-[15px] font-bold text-gray-800">
+                                Aucun {{ THEME.itemName }} trouvé
+                            </h3>
+                            <p class="text-[13px] text-gray-400">
+                                Essayez un autre filtre ou terme de recherche
+                            </p>
                         </div>
                     </div>
                 </div>
-                <!-- /VIDEOS GRID -->
 
-                <!-- Empty state -->
-                <div v-if="filteredVideos.length === 0"
-                    class="flex flex-col items-center justify-center py-20 text-center">
-                    <div class="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-video text-3xl text-amber-500"></i>
-                    </div>
-                    <h3 class="text-base font-semibold text-dark mb-2">Aucun cours vidéo trouvé</h3>
-                    <p class="text-sm text-dark-500 mb-6">Essaie de modifier tes filtres ou ajoute un nouveau cours</p>
-                    <button
-                        class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-dark font-bold text-sm px-5 py-2.5 rounded-[9px] border-none cursor-pointer transition-colors">
-                        <i class="fas fa-plus"></i> Ajouter un cours
-                    </button>
-                </div>
-
+                <!-- ══════════════════════════════════════
+                     PANNEAU DÉTAIL (slide droite)
+                ══════════════════════════════════════ -->
+                <CourseDetail v-if="selectedEnrollment" :enrollement="selectedEnrollment" :theme="THEME"
+                    @close-course-detail="closeEnrollementDetails" />
             </main>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { usePage } from '@inertiajs/vue3'
-import { ref, computed } from 'vue'
-import Navbar from '@/Components/Admin/Layout/Navbar.vue'
-import Sidebar from '@/Components/Admin/Layout/Sidebar.vue'
+import { usePage } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import CourseDetail from '@/Components/Admin/CourseDetail.vue';
+import Navbar from '@/Components/Admin/Layout/Navbar.vue';
+import Sidebar from '@/Components/Admin/Layout/Sidebar.vue';
+import type { EnrollmentItem } from '@/types/enrollement';
+import { VIDEOTHEME } from '@/types/videoTheme';
+import { levelClass } from '@/utils/levelClass';
+import { LEVEL_ORDER } from '@/utils/levelOrder';
+import { progressColor } from '@/utils/progressColor';
 
-interface Video {
-    id: number
-    title: string
-    instructor: string
-    progress: number
-    duration: string
-    level: string
+// ──────────────────────────────────────────────────────────────
+// THÈME — Modifiez ici pour adapter à Vidéo / Audio / PDF
+// ──────────────────────────────────────────────────────────────
+const THEME = VIDEOTHEME;
+
+// ──────────────────────────────────────────────────────────────
+// TYPES
+// ──────────────────────────────────────────────────────────────
+interface PageProps {
+    video: {
+        data: EnrollmentItem[];
+    };
 }
 
-const videos: Video[] = [
-    { id: 1, title: 'JavaScript Avancé — Patterns & Architecture', instructor: 'Jean Dupont', progress: 72, duration: '4h 32min', level: 'Avancé' },
-    { id: 2, title: 'UX/UI Design Fundamentals', instructor: 'Sarah Mbaye', progress: 45, duration: '3h 18min', level: 'Intermédiaire' },
-    { id: 3, title: 'React & Redux Complete Guide', instructor: 'Carlos Torres', progress: 88, duration: '5h 45min', level: 'Intermédiaire' },
-    { id: 4, title: 'Marketing Digital & SEO', instructor: 'Fatou Sow', progress: 23, duration: '2h 56min', level: 'Débutant' },
-    { id: 5, title: 'Web Design Mastery', instructor: 'Marc Leblanc', progress: 100, duration: '4h 12min', level: 'Débutant' },
-    { id: 6, title: 'Python pour la Data Science', instructor: 'Aïcha Diop', progress: 100, duration: '6h 20min', level: 'Avancé' },
-]
+// ──────────────────────────────────────────────────────────────
+// PAGE PROPS
+// ──────────────────────────────────────────────────────────────
+const page = usePage();
+const user = page.props.auth.user;
+const props = defineProps<PageProps>();
 
-const user = usePage().props.auth.user
+const rawData = props.video?.data ?? [];
 
-// Search & filters
-const searchQuery = ref('')
-const activeStatusFilter = ref('all')
-const sortBy = ref('date-desc')
+// ──────────────────────────────────────────────────────────────
+// FILTRE PAR FORMAT
+// ──────────────────────────────────────────────────────────────
+const enrollments = computed<EnrollmentItem[]>(() =>
+    rawData.filter(
+        (e) => e.course?.format?.toLowerCase() === THEME.format.toLowerCase(),
+    ),
+);
 
-const statusFilters = [
-    { id: 'all', label: 'Tous', count: videos.length },
-    { id: 'in-progress', label: 'En cours', count: videos.filter(v => v.progress > 0 && v.progress < 100).length },
-    { id: 'completed', label: 'Terminés', count: videos.filter(v => v.progress === 100).length },
-    { id: 'not-started', label: 'Non commencés', count: videos.filter(v => v.progress === 0).length },
-]
+// ──────────────────────────────────────────────────────────────
+// ÉTAT LOCAL
+// ──────────────────────────────────────────────────────────────
+type FilterId = 'all' | 'in-progress' | 'completed' | 'new';
+type SortKey = 'recent' | 'title' | 'progress_asc' | 'progress_desc' | 'level';
 
-// Computed counts
-const completedCount = computed(() => videos.filter(v => v.progress === 100).length)
-const inProgressCount = computed(() => videos.filter(v => v.progress > 0 && v.progress < 100).length)
+const search = ref<string>('');
+const sortKey = ref<SortKey>('recent');
+const activeFilter = ref<FilterId>('all');
+const selectedEnrollment = ref<EnrollmentItem | null>(null);
 
-// Filtered & sorted videos
-const filteredVideos = computed(() => {
-    let result = [...videos]
+// ──────────────────────────────────────────────────────────────
+// ONGLETS DE FILTRE
+// ──────────────────────────────────────────────────────────────
+const filterTabs = computed(() => [
+    {
+        id: 'all' as FilterId,
+        label: 'Tous',
+        count: enrollments.value.length,
+    },
+    {
+        id: 'in-progress' as FilterId,
+        label: 'En cours',
+        count: enrollments.value.filter(
+            (e) => e.progress > 0 && e.progress < 100,
+        ).length,
+    },
+    {
+        id: 'completed' as FilterId,
+        label: 'Terminés',
+        count: enrollments.value.filter((e) => e.progress === 100).length,
+    },
+    {
+        id: 'new' as FilterId,
+        label: 'Non commencés',
+        count: enrollments.value.filter((e) => e.progress === 0).length,
+    },
+]);
 
-    // Apply search
-    if (searchQuery.value) {
-        const query = searchQuery.value.toLowerCase()
-        result = result.filter(v =>
-            v.title.toLowerCase().includes(query) ||
-            v.instructor.toLowerCase().includes(query)
-        )
+// ──────────────────────────────────────────────────────────────
+// PIPELINE : FILTRE + RECHERCHE + TRI
+// ──────────────────────────────────────────────────────────────
+const filteredAndSorted = computed<EnrollmentItem[]>(() => {
+    let list = [...enrollments.value];
+
+    // ── Filtre onglet
+    if (activeFilter.value === 'in-progress') {
+        list = list.filter((e) => e.progress > 0 && e.course.progress < 100);
+    } else if (activeFilter.value === 'completed') {
+        list = list.filter((e) => e.progress === 100);
+    } else if (activeFilter.value === 'new') {
+        list = list.filter((e) => e.progress === 0);
     }
 
-    // Apply status filter
-    switch (activeStatusFilter.value) {
-        case 'in-progress':
-            result = result.filter(v => v.progress > 0 && v.progress < 100)
-            break
-        case 'completed':
-            result = result.filter(v => v.progress === 100)
-            break
-        case 'not-started':
-            result = result.filter(v => v.progress === 0)
-            break
+    // ── Recherche textuelle
+    const q = search.value.trim().toLowerCase();
+
+    if (q) {
+        list = list.filter(
+            (e) =>
+                e.course.title.toLowerCase().includes(q) ||
+                e.course.description?.toLowerCase().includes(q) ||
+                e.course.category?.toLowerCase().includes(q),
+        );
     }
 
-    // Apply sort
-    switch (sortBy.value) {
-        case 'progress-desc':
-            result.sort((a, b) => b.progress - a.progress)
-            break
-        case 'progress-asc':
-            result.sort((a, b) => a.progress - b.progress)
-            break
-        case 'title-asc':
-            result.sort((a, b) => a.title.localeCompare(b.title))
-            break
-        case 'date-desc':
-        case 'date-asc':
-        default:
-            // Keep original order or reverse
-            if (sortBy.value === 'date-asc') {
-                result.reverse()
-            }
+    // ── Tri
+    list.sort((a, b) => {
+        switch (sortKey.value) {
+            case 'title':
+                return a.course.title.localeCompare(b.course.title, 'fr');
+            case 'progress_asc':
+                return a.progress - b.progress;
+            case 'progress_desc':
+                return b.progress - a.progress;
+            case 'level':
+                return (
+                    (LEVEL_ORDER[a.course.level] ?? 9) -
+                    (LEVEL_ORDER[b.course.level] ?? 9)
+                );
+            case 'recent':
+            default:
+                return (
+                    new Date(b.created_at).getTime() -
+                    new Date(a.created_at).getTime()
+                );
+        }
+    });
 
-            break
+    return list;
+});
+
+// ──────────────────────────────────────────────────────────────
+// ACTIONS
+// ──────────────────────────────────────────────────────────────
+function selectEnrollment(enrollment: EnrollmentItem): void {
+    selectedEnrollment.value =
+        selectedEnrollment.value?.id === enrollment.id ? null : enrollment;
+}
+
+function closeEnrollementDetails(isClose: boolean) {
+    if (isClose) {
+        selectedEnrollment.value = null;
     }
-
-    return result
-})
+}
 </script>
 
 <style scoped>
+/* ── Scrollbar custom ── */
 .scrollbar-thin::-webkit-scrollbar {
     width: 4px;
 }
 
-.scrollbar-thumb-dark-200::-webkit-scrollbar-thumb {
-    background: #E5E7EB;
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #dddde8;
+    border-radius: 9999px;
 }
 
+/* ── Line clamp ── */
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+/* ── Card appear stagger ── */
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.card-appear {
+    opacity: 0;
+    animation: cardAppear 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── Transition panneau latéral ── */
+.slide-panel-enter-active,
+.slide-panel-leave-active {
+    transition:
+        transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.22s ease;
+}
+
+.slide-panel-enter-from,
+.slide-panel-leave-to {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+/* ── Transition overlay ── */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+/* ── Pulse dot ── */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s ease-in-out infinite;
 }
 </style>

@@ -23,10 +23,15 @@ class ProductController extends Controller
     public function indexVideos()
     {
         $student = Auth::user();
-        $courses = $student->enrollements()->with('video')->latest()->get();
+
+        $courses = $student->enrollements()
+            ->whereHas('video')
+            ->with('video')
+            ->latest()
+            ->get();
 
         return Inertia::render('Student/Cours/Videos', [
-            'videos' => EnrollementResource::collection($courses),
+            'video' => EnrollementResource::collection($courses),
         ]);
     }
 
@@ -43,7 +48,7 @@ class ProductController extends Controller
     public function makeEnrollement(StoreEnrollementRequest $request)
     {
         $data = $request->validated();
-        Enrollement::create([
+        Enrollement::firstOrcreate([
             'student_id' => Auth::user()->id,
             'audio_id' => $data['audio_id'] ?? null,
             'video_id' => $data['video_id'] ?? null,

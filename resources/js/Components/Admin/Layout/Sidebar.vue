@@ -9,7 +9,7 @@ const activeSection = ref('dashboard')
 
 const navItems = [
     { key: 'dashboard', label: 'Tableau de bord', icon: 'fas fa-th-large', badge: null, link: studentDashboard() },
-    { key: 'courses', label: 'Mes cours', icon: 'fas fa-book-open', badge: '12', link: studentCourses() },
+    { key: 'courses', label: 'Mes cours PDF', icon: 'fas fa-book-open', badge: '12', link: studentCourses() },
     { key: 'videos', label: 'Vidéos', icon: 'fas fa-video', badge: '8', link: studentVideos() },
     { key: 'audios', label: 'Audios', icon: 'fas fa-headphones', badge: '5', link: studentAudios() },
 ]

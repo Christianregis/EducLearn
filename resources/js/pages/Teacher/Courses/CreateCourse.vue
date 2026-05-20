@@ -306,7 +306,7 @@
                                         : pdfDragOver
                                             ? 'border-amber-400 bg-amber-50/40'
                                             : 'border-gray-200 bg-gray-50 hover:border-amber-300 hover:bg-amber-50/20'">
-                                    <input ref="pdfInput" type="file" accept=".mp3" class="hidden"
+                                    <input ref="pdfInput" type="file" accept=".mp4A" class="hidden"
                                         @change="handlePdfSelect" />
                                     <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
                                         :style="form.file ? 'background:#FEE2E2; color:#DC2626' : 'background:#FEE2E2; color:#DC2626'">

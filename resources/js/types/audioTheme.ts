@@ -1,0 +1,15 @@
+export const AUDIOTHEME = {
+    format: 'audio',
+    accent: '#9333EA',
+    accentText: '#ffffff',
+    defaultCardBg: '#FAF5FF',
+    pageLabel: 'Audiothèque',
+    pageTitle: 'Mes cours audio',
+    pageSubtitle: 'cours audio disponibles',
+    itemName: 'cours audio',
+    icon: 'fas fa-headphones',
+    defaultIcon: 'fas fa-podcast',
+    ctaIcon: 'fas fa-headphones',
+    ctaStart: "Démarrer l'écoute",
+    ctaContinue: "Reprendre l'écoute",
+} as const

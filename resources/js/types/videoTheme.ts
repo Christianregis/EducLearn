@@ -1,0 +1,15 @@
+export const VIDEOTHEME = {
+    format: 'video',
+    accent: '#3B5BDB',
+    accentText: '#ffffff',
+    defaultCardBg: '#EEF2FF',
+    pageLabel: 'Vidéothèque',
+    pageTitle: 'Mes cours vidéo',
+    pageSubtitle: 'cours vidéo disponibles',
+    itemName: 'cours vidéo',
+    icon: 'fas fa-video',
+    defaultIcon: 'fas fa-play-circle',
+    ctaIcon: 'fas fa-play',
+    ctaStart: 'Démarrer le cours',
+    ctaContinue: 'Reprendre le cours',
+} as const
